@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IF TaskPong 3D - Sistema de Tarefas IF Catalão</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --if-green: #006400;
+            --if-gold: #FFD700;
+            --if-blue: #005792;
+            --if-red: #B22222;
+            --if-orange: #FF8C00;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: var(--transition);
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--if-green), var(--if-blue));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 20%, var(--if-gold) 20%, transparent 21%);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            transform: rotate(30deg);
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .logo i {
+            color: var(--if-gold);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--if-green);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px dashed var(--if-green);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--if-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .points-system {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .point-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid var(--if-green);
+            cursor: pointer;
+        }
+
+        .point-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .point-item h3 {
+            color: var(--if-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .point-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--if-green);
+        }
+
+        .ranking {
+            margin-top: 1.5rem;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--if-gold);
+        }
+
+        .ranking-position {
+            width: 30px;
+            height: 30px;
+            background-color: var(--if-green);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .ranking-1 .ranking-position {
+            background-color: gold;
+            color: black;
+        }
+
+        .ranking-2 .ranking-position {
+            background-color: silver;
+            color: black;
+        }
+
+        .ranking-3 .ranking-position {
+            background-color: #cd7f32;
+            color: black;
+        }
+
+        .ranking-info {
+            flex-grow: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+        }
+
+        .ranking-score {
+            color: var(--if-blue);
+            font-weight: 500;
+        }
+
+        .class-ranking {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .class-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--if-green);
+        }
+
+        .class-position {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--if-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .class-name {
+            font-weight: 600;
+            color: var(--if-blue);
+        }
+
+        .pingpong {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--if-green), var(--if-blue));
+            color: white;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pingpong::before {
+            content: "🏓";
+            position: absolute;
+            font-size: 5rem;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .pingpong h2 {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .pingpong p {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            font-style: italic;
+        }
+
+        footer {
+            background-color: var(--if-green);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* Jogo de Ping Pong 3D */
+        #game-container {
+            width: 100%;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        #game-canvas {
+            width: 100%;
+            height: 400px;
+            background: #222;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .game-controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-game {
+            background-color: var(--if-green);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-game:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-game.start {
+            background-color: var(--if-green);
+        }
+
+        .btn-game.reset {
+            background-color: var(--if-red);
+        }
+
+        .score-display {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: var(--if-blue);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructions h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .instructions ul {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .instructions li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .instructions li:before {
+            content: "•";
+            color: var(--if-gold);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Tabs de Tarefas */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            border-bottom: 2px solid var(--if-green);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 5px 5px 0 0;
+            margin-right: 0.5rem;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background-color: var(--if-green);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .task-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .task-item {
+            padding: 0.75rem;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--if-green);
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-item.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-actions button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .complete-task {
+            color: var(--if-green);
+        }
+
+        .delete-task {
+            color: var(--if-red);
+        }
+
+        /* Modal para adicionar tarefas */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--if-blue);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--if-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--if-blue);
+        }
+
+        .add-task-btn {
+            margin-top: 1rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--if-green);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-task-btn:hover {
+            background-color: var(--if-blue);
+        }
+
+        .empty-tasks {
+            text-align: center;
+            color: #6c757d;
+            padding: 2rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-table-tennis"></i>
+            <h1>IF TaskPong 3D</h1>
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <p>Organize suas tarefas do IF Catalão para sobrar mais tempo para o ping pong!</p>
+    </header>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-tasks"></i> Sistema de Pontuação</h2>
+                </div>
+                <div class="points-system">
+                    <div class="point-item" onclick="openTaskModal('Moodle EAD')">
+                        <h3>Moodle EAD</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                    <div class="point-item" onclick="openTaskModal('Prova 1')">
+                        <h3>Prova 1</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                    <div class="point-item" onclick="openTaskModal('Prova 2')">
+                        <h3>Prova 2</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                    <div class="point-item" onclick="openTaskModal('Trabalho')">
+                        <h3>Trabalho</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                    <div class="point-item" onclick="openTaskModal('Atividades em Sala')">
+                        <h3>Atividades em Sala</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                    <div class="point-item" onclick="openTaskModal('Listas')">
+                        <h3>Listas</h3>
+                        <div class="point-value">20 pts</div>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'tasks-todo')">A Fazer</div>
+                    <div class="tab" onclick="openTab(event, 'tasks-done')">Concluídas</div>
+                </div>
+
+                <div id="tasks-todo" class="tab-content active">
+                    <h3><i class="fas fa-clipboard-list"></i> Tarefas Pendentes</h3>
+                    <ul class="task-list" id="todo-list">
+                        <li class="task-item">
+                            <span>Atividade de Matemática - Lista de exercícios</span>
+                            <div class="task-actions">
+                                <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
+                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <span>Projeto de História - Pesquisa sobre Japão</span>
+                            <div class="task-actions">
+                                <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
+                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="add-task-btn" onclick="openTaskModal('Geral')">
+                        <i class="fas fa-plus"></i> Adicionar Nova Tarefa
+                    </button>
+                </div>
+
+                <div id="tasks-done" class="tab-content">
+                    <h3><i class="fas fa-check-circle"></i> Tarefas Concluídas</h3>
+                    <ul class="task-list" id="done-list">
+                        <li class="task-item completed">
+                            <span>Relatório de Física - Energia renovável</span>
+                            <div class="task-actions">
+                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="empty-tasks" id="empty-completed" style="display: none;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Nenhuma tarefa concluída ainda</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-crown"></i> Ranking de Alunos</h2>
+                </div>
+                <div class="ranking">
+                    <div class="ranking-item ranking-1">
+                        <div class="ranking-position">1</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Samuel</div>
+                            <div class="ranking-score">Média geral: 10.0</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item ranking-2">
+                        <div class="ranking-position">2</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Emanuel Pereira Carvalho</div>
+                            <div class="ranking-score">Média geral: 9.6</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item ranking-3">
+                        <div class="ranking-position">3</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Gabriel Furtado</div>
+                            <div class="ranking-score">Média geral: 9.4</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-position">4</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Lucas</div>
+                            <div class="ranking-score">Média geral: 9.2</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-position">5</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Júlia Vieira</div>
+                            <div class="ranking-score">Média geral: 9.1</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-position">6</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Maria Rita</div>
+                            <div class="ranking-score">Média geral: 9.1</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-position">7</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Julia Marques</div>
+                            <div class="ranking-score">Média geral: 9.1</div>
+                        </div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-position">8</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Álef</div>
+                            <div class="ranking-score">Média geral: 9.1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-trophy"></i> Ranking de Salas</h2>
+            </div>
+            <div class="class-ranking">
+                <div class="class-item">
+                    <div class="class-position">1º Lugar</div>
+                    <div class="class-name">3º Informática</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-position">2º Lugar</div>
+                    <div class="class-name">3º Mineração</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-position">3º Lugar</div>
+                    <div class="class-name">2º Informática</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-position">4º Lugar</div>
+                    <div class="class-name">2º Mineração</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-position">5º Lugar</div>
+                    <div class="class-name">1º Informática</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-position">6º Lugar</div>
+                    <div class="class-name">1º Mineração</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pingpong">
+            <h2>🏓 Ping Pong IF Catalão 3D 🏓</h2>
+            <p>"Bora jogar um ping-pongas!"</p>
+        </div>
+
+        <div id="game-container">
+            <div id="game-canvas"></div>
+            <div class="score-display">
+                Pontuação: <span id="score">0</span> | 
+                Velocidade: <span id="speed">1.0x</span>
+            </div>
+            <div class="game-controls">
+                <button class="btn-game start" id="start-game">
+                    <i class="fas fa-play"></i> Iniciar Jogo
+                </button>
+                <button class="btn-game reset" id="reset-game">
+                    <i class="fas fa-sync-alt"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> Como Jogar Ping Pong 3D</h3>
+            <ul>
+                <li>Clique em <strong>"Iniciar Jogo"</strong> para começar</li>
+                <li>Use as <strong>setas para cima e para baixo</strong> para mover sua raquete (esquerda)</li>
+                <li>Rebata a bola para o lado do oponente para marcar pontos</li>
+                <li>Cada rebatida bem-sucedida aumenta sua pontuação</li>
+                <li>A bola acelera gradualmente, aumentando a dificuldade</li>
+                <li>Se a bola passar pela sua raquete, o jogo reinicia</li>
+                <li>Clique em <strong>"Reiniciar"</strong> para começar uma nova partida</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>IF Task-JaPong 3D &copy; 2025 - Sistema de Organização de Tarefas</p>
+        <p>Desenvolvido para os alunos do IF Catalão; 
+            <p>Créditos; Beicin, Champola, Sabugo, Furtado, Japa, Schons! </p>
+    </footer>
+
+    <!-- Modal para adicionar tarefas -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Adicionar Nova Tarefa</h2>
+                <button class="close-modal" onclick="closeTaskModal()">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskCategory">Categoria</label>
+                    <select id="taskCategory" class="form-control" required>
+                        <option value="Moodle EAD">Moodle EAD</option>
+                        <option value="Prova 1">Prova 1</option>
+                        <option value="Prova 2">Prova 2</option>
+                        <option value="Trabalho">Trabalho</option>
+                        <option value="Atividades em Sala">Atividades em Sala</option>
+                        <option value="Listas">Listas</option>
+                        <option value="Geral">Geral</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskName">Nome da Tarefa</label>
+                    <input type="text" id="taskName" class="form-control" placeholder="Ex: Lista de exercícios de Matemática" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate">Data de Entrega</label>
+                    <input type="date" id="taskDueDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Descrição (opcional)</label>
+                    <textarea id="taskDescription" class="form-control" rows="3" placeholder="Detalhes da tarefa..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-plus"></i> Adicionar Tarefa
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===== SISTEMA DE TAREFAS =====
+        function openTaskModal(category) {
+            document.getElementById('taskModal').style.display = 'flex';
+            document.getElementById('taskCategory').value = category;
+            document.getElementById('modal-title').textContent = `Nova Tarefa - ${category}`;
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+            document.getElementById('taskForm').reset();
+        }
+
+        // Fechar modal clicando fora dele
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('taskModal');
+            if (event.target === modal) {
+                closeTaskModal();
+            }
+        });
+
+        // Adicionar nova tarefa
+        document.getElementById('taskForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const category = document.getElementById('taskCategory').value;
+            const name = document.getElementById('taskName').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const description = document.getElementById('taskDescription').value;
+            
+            // Criar elemento de tarefa
+            const taskElement = document.createElement('li');
+            taskElement.className = 'task-item';
+            
+            let taskText = `<strong>${category}:</strong> ${name}`;
+            if (dueDate) {
+                const formattedDate = new Date(dueDate).toLocaleDateString('pt-BR');
+                taskText += ` <br><small>Entrega: ${formattedDate}</small>`;
+            }
+            if (description) {
+                taskText += ` <br><small>${description}</small>`;
+            }
+            
+            taskElement.innerHTML = `
+                <span>${taskText}</span>
+                <div class="task-actions">
+                    <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
+                    <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            
+            // Adicionar à lista de tarefas
+            document.getElementById('todo-list').appendChild(taskElement);
+            
+            // Fechar modal e limpar formulário
+            closeTaskModal();
+            
+            // Mostrar mensagem de sucesso
+            alert('Tarefa adicionada com sucesso!');
+        });
+
+        function completeTask(button) {
+            const taskItem = button.closest('.task-item');
+            taskItem.classList.add('completed');
+            
+            // Remover botão de completar
+            const completeBtn = taskItem.querySelector('.complete-task');
+            if (completeBtn) completeBtn.remove();
+            
+            // Mover para a lista de concluídas
+            document.getElementById('done-list').appendChild(taskItem);
+            
+            // Verificar se precisa mostrar a mensagem de lista vazia
+            checkEmptyTasks();
+        }
+
+        function deleteTask(button) {
+            const taskItem = button.closest('.task-item');
+            const isCompleted = taskItem.classList.contains('completed');
+            taskItem.remove();
+            
+            // Verificar se precisa mostrar a mensagem de lista vazia
+            if (isCompleted) {
+                checkEmptyTasks();
+            }
+        }
+
+        function checkEmptyTasks() {
+            const doneList = document.getElementById('done-list');
+            const emptyCompleted = document.getElementById('empty-completed');
+            
+            if (doneList.children.length === 0) {
+                emptyCompleted.style.display = 'block';
+            } else {
+                emptyCompleted.style.display = 'none';
+            }
+        }
+
+        function openTab(evt, tabId) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // ===== JOGO PING PONG 3D =====
+        // Variáveis do jogo
+        let scene, camera, renderer;
+        let paddleLeft, paddleRight, ball;
+        let paddleHeight = 2;
+        let paddleWidth = 0.5;
+        let paddleDepth = 0.2;
+        let ballSize = 0.3;
+        let ballSpeedX = 0.05;
+        let ballSpeedY = 0.03;
+        let ballSpeedZ = 0.05;
+        let score = 0;
+        let gameRunning = false;
+        let tableWidth = 10;
+        let tableHeight = 5;
+        let tableDepth = 0.5;
+        let keys = {};
+
+        // Inicializar a cena 3D
+        function initGame() {
+            // Configurar a cena
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+
+            // Configurar a câmera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10;
+            camera.position.y = 5;
+
+            // Configurar o renderizador
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(document.getElementById('game-canvas').offsetWidth, 400);
+            document.getElementById('game-canvas').appendChild(renderer.domElement);
+
+            // Adicionar luzes
+            const ambientLight = new THREE.AmbientLight(0x606060);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(0, 10, 5);
+            scene.add(directionalLight);
+
+            // Criar a mesa de ping pong
+            createTable();
+
+            // Criar as raquetes
+            createPaddles();
+
+            // Criar a bola
+            createBall();
+
+            // Iniciar a animação
+            animate();
+
+            // Adicionar event listeners para controles
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+        }
+
+        // Criar a mesa de ping pong
+        function createTable() {
+            const tableGeometry = new THREE.BoxGeometry(tableWidth, tableDepth, tableHeight);
+            const tableMaterial = new THREE.MeshLambertMaterial({ color: 0x2E8B57 });
+            const table = new THREE.Mesh(tableGeometry, tableMaterial);
+            table.position.y = -tableDepth / 2;
+            scene.add(table);
+
+            // Linhas da mesa
+            const lineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const lineGeometry = new THREE.BoxGeometry(0.1, tableDepth + 0.1, tableHeight);
+            const line = new THREE.Mesh(lineGeometry, lineMaterial);
+            line.position.x = 0;
+            scene.add(line);
+
+            // Rede
+            const netGeometry = new THREE.BoxGeometry(0.1, 1, tableHeight);
+            const netMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            const net = new THREE.Mesh(netGeometry, netMaterial);
+            net.position.set(0, 0.5, 0);
+            scene.add(net);
+        }
+
+        // Criar as raquetes
+        function createPaddles() {
+            const paddleMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
+            const paddleGeometry = new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth);
+
+            // Raquete esquerda (jogador)
+            paddleLeft = new THREE.Mesh(paddleGeometry, paddleMaterial);
+            paddleLeft.position.set(-tableWidth/2 + 1, paddleHeight/2, 0);
+            scene.add(paddleLeft);
+
+            // Raquete direita (oponente)
+            paddleRight = new THREE.Mesh(paddleGeometry, new THREE.MeshLambertMaterial({ color: 0x4361ee }));
+            paddleRight.position.set(tableWidth/2 - 1, paddleHeight/2, 0);
+            scene.add(paddleRight);
+        }
+
+        // Criar a bola
+        function createBall() {
+            const ballGeometry = new THREE.SphereGeometry(ballSize, 32, 32);
+            const ballMaterial = new THREE.MeshLambertMaterial({ color: 0xff4500 });
+            ball = new THREE.Mesh(ballGeometry, ballMaterial);
+            ball.position.set(0, ballSize, 0);
+            scene.add(ball);
+        }
+
+        // Animar a cena
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // MOVIMENTO DA RAQUETE (fora do bloco gameRunning para responder imediatamente)
+            if (keys[38]) { // Seta para cima
+                paddleLeft.position.y = Math.min(paddleLeft.position.y + 0.5, tableHeight);
+            }
+            if (keys[40]) { // Seta para baixo
+                paddleLeft.position.y = Math.max(paddleLeft.position.y - 0.5, paddleHeight/2);
+            }
+            if (keys[37]) { // Seta para esquerda
+                paddleLeft.position.z = Math.max(paddleLeft.position.z - 0.5, -tableHeight/2 + 1);
+            }
+            if (keys[39]) { // Seta para direita
+                paddleLeft.position.z = Math.min(paddleLeft.position.z + 0.5, tableHeight/2 - 1);
+            }
+
+            if (gameRunning) {
+                // Mover a bola
+                ball.position.x += ballSpeedX;
+                ball.position.y += ballSpeedY;
+                ball.position.z += ballSpeedZ;
+
+                // Verificar colisões com as paredes (laterais)
+                if (ball.position.x + ballSize > tableWidth/2 || ball.position.x - ballSize < -tableWidth/2) {
+                    ballSpeedX = -ballSpeedX;
+                }
+
+                // Verificar colisões com as paredes (fundo)
+                if (ball.position.z + ballSize > tableHeight/2 || ball.position.z - ballSize < -tableHeight/2) {
+                    ballSpeedZ = -ballSpeedZ;
+                }
+
+                // Verificar colisões com o teto e o chão
+                if (ball.position.y + ballSize > paddleHeight || ball.position.y - ballSize < ballSize) {
+                    ballSpeedY = -ballSpeedY;
+                }
+
+                // Verificar colisão com a raquete esquerda
+                if (ball.position.x - ballSize < paddleLeft.position.x + paddleWidth/2 &&
+                    ball.position.x + ballSize > paddleLeft.position.x - paddleWidth/2 &&
+                    ball.position.z < paddleLeft.position.z + paddleDepth/2 &&
+                    ball.position.z > paddleLeft.position.z - paddleDepth/2 &&
+                    ball.position.y < paddleLeft.position.y + paddleHeight/2 &&
+                    ball.position.y > paddleLeft.position.y - paddleHeight/2) {
+                    
+                    ballSpeedX = Math.abs(ballSpeedX); // Mover para a direita
+                    score++;
+                    document.getElementById('score').textContent = score;
+                    
+                    // Aumentar a velocidade gradualmente
+                    ballSpeedX *= 1.05;
+                    ballSpeedY *= 1.05;
+                    ballSpeedZ *= 1.05;
+                    
+                    document.getElementById('speed').textContent = (ballSpeedX / 0.05).toFixed(1) + 'x';
+                }
+
+                // Verificar colisão com a raquete direita (IA)
+                if (ball.position.x + ballSize > paddleRight.position.x - paddleWidth/2 &&
+                    ball.position.x - ballSize < paddleRight.position.x + paddleWidth/2 &&
+                    ball.position.z < paddleRight.position.z + paddleDepth/2 &&
+                    ball.position.z > paddleRight.position.z - paddleDepth/2 &&
+                    ball.position.y < paddleRight.position.y + paddleHeight/2 &&
+                    ball.position.y > paddleRight.position.y - paddleHeight/2) {
+                    
+                    ballSpeedX = -Math.abs(ballSpeedX); // Mover para a esquerda
+                }
+
+                // IA simples para a raquete direita
+                paddleRight.position.y += (ball.position.y - paddleRight.position.y) * 0.05;
+                paddleRight.position.z += (ball.position.z - paddleRight.position.z) * 0.03;
+
+                // Limitar movimento da raquete direita
+                paddleRight.position.y = Math.max(paddleHeight/2, Math.min(tableHeight, paddleRight.position.y));
+                paddleRight.position.z = Math.max(-tableHeight/2 + 1, Math.min(tableHeight/2 - 1, paddleRight.position.z));
+
+                // Verificar se a bola passou da raquete esquerda (ponto perdido)
+                if (ball.position.x < -tableWidth/2) {
+                    resetGame();
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Manipular teclas pressionadas
+        function handleKeyDown(event) {
+            keys[event.keyCode] = true;
+        }
+
+        function handleKeyUp(event) {
+            keys[event.keyCode] = false;
+        }
+
+        // Reiniciar o jogo
+        function resetGame() {
+            ball.position.set(0, ballSize, 0);
+            
+            // Definir velocidade e direção aleatórias
+            ballSpeedX = (Math.random() > 0.5 ? 0.05 : -0.05);
+            ballSpeedY = 0.03;
+            ballSpeedZ = (Math.random() * 0.06) - 0.03;
+            
+            score = 0;
+            document.getElementById('score').textContent = score;
+            document.getElementById('speed').textContent = '1.0x';
+            
+            // Reposicionar as raquetes
+            paddleLeft.position.set(-tableWidth/2 + 1, paddleHeight/2, 0);
+            paddleRight.position.set(tableWidth/2 - 1, paddleHeight/2, 0);
+        }
+
+        // Iniciar o jogo
+        document.getElementById('start-game').addEventListener('click', function() {
+            if (!gameRunning) {
+                gameRunning = true;
+                resetGame();
+                this.textContent = ' Jogo Iniciado';
+                this.disabled = true;
+            }
+        });
+
+        // Reiniciar o jogo
+        document.getElementById('reset-game').addEventListener('click', function() {
+            resetGame();
+            gameRunning = true;
+            document.getElementById('start-game').textContent = ' Jogo Iniciado';
+            document.getElementById('start-game').disabled = true;
+        });
+
+        // Redimensionar o jogo quando a janela para redimensionada
+        window.addEventListener('resize', function() {
+            if (camera && renderer) {
+                camera.aspect = document.getElementById('game-canvas').offsetWidth / 400;
+                camera.updateProjectionMatrix();
+                renderer.setSize(document.getElementById('game-canvas').offsetWidth, 400);
+            }
+        });
+
+        // Inicializar o jogo quando a página carregar
+        window.onload = function() {
+            initGame();
+            checkEmptyTasks();
+        };
+    </script>
+</body>
+</html>
