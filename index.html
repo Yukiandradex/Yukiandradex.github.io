@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IF TaskPong 3D - Sistema de Tarefas IF Catalão</title>
+    <title>One Bite - Com Carrossel e Música</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
         :root {
             --if-green: #006400;
@@ -13,30 +14,164 @@
             --if-blue: #005792;
             --if-red: #B22222;
             --if-orange: #FF8C00;
+            --if-purple: #7209b7;
             --light: #f8f9fa;
             --dark: #212529;
             --transition: all 0.3s ease;
+            --neon-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--if-blue), 0 0 20px var(--if-blue);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: var(--transition);
         }
 
         body {
-            background-color: var(--light);
-            color: var(--dark);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23005171" fill-opacity="0.1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,224C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        .login-logo {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: var(--neon-glow);
+        }
+
+        .login-logo i {
+            color: var(--if-gold);
+            animation: bounce 2s infinite;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 1rem 1.2rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 131, 255, 0.5);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 131, 255, 0.4);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         header {
@@ -44,11 +179,13 @@
             color: white;
             padding: 1.5rem;
             border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         header::before {
@@ -80,6 +217,19 @@
             animation: bounce 2s infinite;
         }
 
+        .logo-onebit {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--if-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -99,11 +249,19 @@
         }
 
         .card {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border-top: 5px solid var(--if-green);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
         .card-header {
@@ -112,13 +270,13 @@
             align-items: center;
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px dashed var(--if-green);
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
         .card-title {
             font-size: 1.3rem;
             font-weight: 600;
-            color: var(--if-green);
+            color: var(--if-gold);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -131,21 +289,23 @@
         }
 
         .point-item {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             padding: 1rem;
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid var(--if-green);
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .point-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
         }
 
         .point-item h3 {
-            color: var(--if-blue);
+            color: var(--if-gold);
             margin-bottom: 0.5rem;
         }
 
@@ -153,6 +313,7 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--if-green);
+            text-shadow: 0 0 10px rgba(0, 100, 0, 0.5);
         }
 
         .ranking {
@@ -164,9 +325,15 @@
             align-items: center;
             padding: 0.8rem;
             margin-bottom: 0.8rem;
-            background-color: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             border-left: 4px solid var(--if-gold);
+            transition: transform 0.3s;
+        }
+
+        .ranking-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .ranking-position {
@@ -185,16 +352,19 @@
         .ranking-1 .ranking-position {
             background-color: gold;
             color: black;
+            box-shadow: 0 0 10px gold;
         }
 
         .ranking-2 .ranking-position {
             background-color: silver;
             color: black;
+            box-shadow: 0 0 10px silver;
         }
 
         .ranking-3 .ranking-position {
             background-color: #cd7f32;
             color: black;
+            box-shadow: 0 0 10px #cd7f32;
         }
 
         .ranking-info {
@@ -203,10 +373,11 @@
 
         .ranking-name {
             font-weight: 600;
+            color: white;
         }
 
         .ranking-score {
-            color: var(--if-blue);
+            color: var(--if-gold);
             font-weight: 500;
         }
 
@@ -218,11 +389,17 @@
         }
 
         .class-item {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             padding: 1rem;
             border-radius: 10px;
             text-align: center;
             border: 2px solid var(--if-green);
+            transition: all 0.3s;
+        }
+
+        .class-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(0, 100, 0, 0.5);
         }
 
         .class-position {
@@ -230,22 +407,24 @@
             font-weight: 700;
             color: var(--if-green);
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 100, 0, 0.5);
         }
 
         .class-name {
             font-weight: 600;
-            color: var(--if-blue);
+            color: var(--if-gold);
         }
 
         .pingpong {
             text-align: center;
             margin: 2rem 0;
-            padding: 1rem;
+            padding: 1.5rem;
             background: linear-gradient(135deg, var(--if-green), var(--if-blue));
             color: white;
             border-radius: 15px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .pingpong::before {
@@ -261,6 +440,7 @@
         .pingpong h2 {
             margin-bottom: 1rem;
             position: relative;
+            text-shadow: var(--neon-glow);
         }
 
         .pingpong p {
@@ -271,12 +451,14 @@
         }
 
         footer {
-            background-color: var(--if-green);
+            background: rgba(0, 100, 0, 0.2);
+            backdrop-filter: blur(10px);
             color: white;
             text-align: center;
             padding: 1.5rem;
             margin-top: 2rem;
             border-radius: 15px 15px 0 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Jogo de Ping Pong 3D */
@@ -289,10 +471,11 @@
         #game-canvas {
             width: 100%;
             height: 400px;
-            background: #222;
+            background: #111;
             border-radius: 10px;
             margin: 0 auto;
             display: block;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .game-controls {
@@ -303,7 +486,7 @@
         }
 
         .btn-game {
-            background-color: var(--if-green);
+            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
@@ -314,6 +497,7 @@
             align-items: center;
             gap: 0.5rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
         }
 
         .btn-game:hover {
@@ -322,28 +506,28 @@
         }
 
         .btn-game.start {
-            background-color: var(--if-green);
+            background: linear-gradient(45deg, var(--if-green), #00c853);
         }
 
         .btn-game.reset {
-            background-color: var(--if-red);
+            background: linear-gradient(45deg, var(--if-red), #ff5252);
         }
 
         .score-display {
             font-size: 2rem;
             font-weight: bold;
             margin: 1rem 0;
-            color: var(--if-blue);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--if-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .instructions {
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            background: linear-gradient(135deg, var(--if-purple), #4361ee);
             color: white;
             padding: 1.5rem;
             border-radius: 15px;
             margin-top: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .instructions h3 {
@@ -386,10 +570,11 @@
         .tab {
             padding: 0.75rem 1.5rem;
             cursor: pointer;
-            background-color: #f0f0f0;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px 5px 0 0;
             margin-right: 0.5rem;
             font-weight: 500;
+            transition: all 0.3s;
         }
 
         .tab.active {
@@ -400,7 +585,7 @@
         .tab-content {
             display: none;
             padding: 1.5rem;
-            background-color: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 0 0 5px 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -416,18 +601,25 @@
 
         .task-item {
             padding: 0.75rem;
-            background-color: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--if-green);
             margin-bottom: 0.5rem;
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .task-item.completed {
             opacity: 0.7;
             text-decoration: line-through;
+            border-left: 4px solid var(--if-gold);
         }
 
         .task-actions {
@@ -440,6 +632,11 @@
             background: none;
             cursor: pointer;
             font-size: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .task-actions button:hover {
+            transform: scale(1.2);
         }
 
         .complete-task {
@@ -458,19 +655,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: white;
+            background: rgba(30, 30, 40, 0.9);
             padding: 2rem;
             border-radius: 12px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         .modal-header {
@@ -479,7 +679,7 @@
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .close-modal {
@@ -487,7 +687,7 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--if-blue);
+            color: var(--if-gold);
         }
 
         .form-group {
@@ -498,14 +698,23 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--if-gold);
         }
 
         .form-control {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             font-size: 1rem;
+            color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--if-blue);
+            box-shadow: 0 0 10px rgba(0, 131, 255, 0.5);
         }
 
         .btn {
@@ -520,12 +729,12 @@
         }
 
         .btn-primary {
-            background-color: var(--if-green);
+            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--if-blue);
+            background: linear-gradient(45deg, var(--if-blue), var(--if-green));
         }
 
         .add-task-btn {
@@ -535,39 +744,525 @@
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
-            background-color: var(--if-green);
+            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
             color: white;
             padding: 0.75rem;
             border-radius: 4px;
             border: none;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .add-task-btn:hover {
-            background-color: var(--if-blue);
+            background: linear-gradient(45deg, var(--if-blue), var(--if-green));
+            transform: translateY(-3px);
         }
 
         .empty-tasks {
             text-align: center;
-            color: #6c757d;
+            color: rgba(255, 255, 255, 0.5);
             padding: 2rem;
             font-style: italic;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Floating animation for cards */
+        @keyframes float-card {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float-card 6s ease-in-out infinite;
+        }
+
+        /* Neon text effect */
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--if-blue), 0 0 20px var(--if-blue);
+        }
+
+        /* Glow effect */
+        .glow {
+            box-shadow: 0 0 10px var(--if-green), 0 0 20px var(--if-green), 0 0 30px var(--if-green);
+        }
+
+        /* NOVOS ESTILOS ADICIONADOS */
+        
+        /* Carrossel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 3rem auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: var(--light);
+        }
+
+        .carousel-caption h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--if-gold);
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 1rem;
+            z-index: 10;
+        }
+
+        .carousel-control {
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--light);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .carousel-control:hover {
+            background: var(--if-blue);
+            transform: scale(1.1);
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .carousel-indicator.active {
+            background: var(--if-gold);
+            transform: scale(1.2);
+        }
+
+        /* Player de Música */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 900;
+            border: 1px solid var(--if-blue);
+        }
+
+        .music-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .music-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--if-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .music-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .music-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .music-artist {
+            font-size: 0.8rem;
+            color: var(--if-gold);
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .music-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .music-btn:hover {
+            color: var(--if-gold);
+            transform: scale(1.1);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--if-gold);
+            cursor: pointer;
+        }
+
+        /* Animações de scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Menu Hambúrguer */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+            position: fixed;
+            top: 25px;
+            right: 25px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--light);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Navegação */
+        nav {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 7, 45, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 6rem 2rem 2rem;
+            z-index: 999;
+            transition: right 0.4s ease;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        nav.active {
+            right: 0;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-bottom: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            background: rgba(166, 225, 250, 0.1);
+            transform: translateX(5px);
+            color: var(--if-gold);
+        }
+
+        nav ul li a i {
+            margin-right: 0.5rem;
+            width: 25px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .carousel-item {
+                height: 300px;
+            }
+            
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                border-radius: 15px;
+                padding: 0.8rem;
+            }
+            
+            .volume-control {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <i class="fas fa-table-tennis"></i>
-            <h1>IF TaskPong 3D</h1>
-            <i class="fas fa-graduation-cap"></i>
-        </div>
-        <p>Organize suas tarefas do IF Catalão para sobrar mais tempo para o ping pong!</p>
-    </header>
+    <!-- Menu Hambúrguer -->
+    <div class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
-    <div class="container">
+    <!-- Navegação -->
+    <nav id="nav">
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="#"><i class="fas fa-tasks"></i> Tarefas</a></li>
+            <li><a href="#"><i class="fas fa-crown"></i> Ranking</a></li>
+            <li><a href="#"><i class="fas fa-gamepad"></i> Ping Pong</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+
+    <!-- Player de Música -->
+    <div class="music-player">
+        <div class="music-info">
+            <div class="music-thumbnail">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="music-details">
+                <div class="music-title">Música Relaxante</div>
+                <div class="music-artist">One Bite</div>
+            </div>
+        </div>
+        <div class="music-controls">
+            <button class="music-btn" id="prev-btn">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="music-btn" id="play-pause-btn">
+                <i class="fas fa-pause"></i>
+            </button>
+            <button class="music-btn" id="next-btn">
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <div class="volume-control">
+                <button class="music-btn" id="mute-btn">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-table-tennis"></i>
+                <h1>One Bit</h1>
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <form class="login-form" id="login-form">
+                <input type="text" class="form-input" placeholder="Usuário" required>
+                <input type="password" class="form-input" placeholder="Senha" required>
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+            <div class="login-footer">
+                <p>One Bit - Sistema de Tarefas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (hidden until login) -->
+    <div class="container" id="main-content">
+        <header>
+            <div class="logo-onebit">
+                <i class="fas fa-star"></i>
+                <span>Logo One Bit</span>
+            </div>
+            <div class="logo">
+                <i class="fas fa-table-tennis"></i>
+                <h1>One Bit</h1>
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <p>Execute suas tarefas com One Bit</p>
+        </header>
+
+        <!-- Carrossel Adicionado -->
+        <div class="carousel-container">
+            <div class="carousel" id="carousel">
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Estudantes">
+                    <div class="carousel-caption">
+                        <h3>Bem-vindo ao One Bit</h3>
+                        <p>O sistema completo para gerenciar suas tarefas escolares</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Organização">
+                    <div class="carousel-caption">
+                        <h3>Organize suas Tarefas</h3>
+                        <p>Mantenha-se atualizado com todas as suas atividades</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Ping Pong">
+                    <div class="carousel-caption">
+                        <h3>Jogue Ping Pong</h3>
+                        <p>Descanse e divirta-se com nosso jogo exclusivo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <div class="carousel-control" id="prev-control">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="carousel-control" id="next-control">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            <div class="carousel-indicators" id="carousel-indicators">
+                <div class="carousel-indicator active"></div>
+                <div class="carousel-indicator"></div>
+                <div class="carousel-indicator"></div>
+            </div>
+        </div>
+
         <div class="dashboard">
-            <div class="card">
+            <!-- Conteúdo original do seu site continua aqui -->
+            <div class="card floating">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-tasks"></i> Sistema de Pontuação</h2>
                 </div>
@@ -643,7 +1338,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card floating">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-crown"></i> Ranking de Alunos</h2>
                 </div>
@@ -708,34 +1403,34 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card floating">
             <div class="card-header">
-                <h2 class="card-title"><i class="fas fa-trophy"></i> Ranking de Salas</h2>
+                <h2 class="card-title"><i class="fas fa-trophy"></i> Faça a diferença</h2>
             </div>
             <div class="class-ranking">
                 <div class="class-item">
-                    <div class="class-position">1º Lugar</div>
-                    <div class="class-name">3º Informática</div>
+                    <div class="class-position">Calendário Acadêmico</div>
+                    <div class="class-name">Faça sua agenda</div>
                 </div>
                 <div class="class-item">
-                    <div class="class-position">2º Lugar</div>
-                    <div class="class-name">3º Mineração</div>
+                    <div class="class-position">Rotina de estudo</div>
+                    <div class="class-name">Adicione ideias voláteis</div>
                 </div>
                 <div class="class-item">
-                    <div class="class-position">3º Lugar</div>
-                    <div class="class-name">2º Informática</div>
+                    <div class="class-position">Calculadora</div>
+                    <div class="class-name">Calculadora completa</div>
                 </div>
                 <div class="class-item">
-                    <div class="class-position">4º Lugar</div>
-                    <div class="class-name">2º Mineração</div>
+                    <div class="class-position">Jornada do Estudante</div>
+                    <div class="class-name">Dedica-se ao Enem</div>
                 </div>
                 <div class="class-item">
-                    <div class="class-position">5º Lugar</div>
-                    <div class="class-name">1º Informática</div>
+                    <div class="class-position">Redação + corretor IA</div>
+                    <div class="class-name">Dedica-se a escrita</div>
                 </div>
                 <div class="class-item">
-                    <div class="class-position">6º Lugar</div>
-                    <div class="class-name">1º Mineração</div>
+                    <div class="class-position">Apostilas</div>
+                    <div class="class-name">Faça a diferença</div>
                 </div>
             </div>
         </div>
@@ -765,7 +1460,8 @@
             <h3><i class="fas fa-info-circle"></i> Como Jogar Ping Pong 3D</h3>
             <ul>
                 <li>Clique em <strong>"Iniciar Jogo"</strong> para começar</li>
-                <li>Use as <strong>setas para cima e para baixo</strong> para mover sua raquete (esquerda)</li>
+                <li>Use as <strong>setas esquerda e direita</strong> para mover sua raquete horizontalmente</li>
+                <li>Use as <strong>setas para cima e para baixo</strong> para mover sua raquete verticalmente</li>
                 <li>Rebata a bola para o lado do oponente para marcar pontos</li>
                 <li>Cada rebatida bem-sucedida aumenta sua pontuação</li>
                 <li>A bola acelera gradualmente, aumentando a dificuldade</li>
@@ -820,7 +1516,193 @@
         </div>
     </div>
 
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Áudio para música de fundo -->
+    <audio id="background-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/01/20/audio_5e6f432fa5.mp3?filename=relaxing-music-meditation-121679.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
     <script>
+        // ===== LOGIN SYSTEM =====
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate login process
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Add fade out effect to login screen
+            loginScreen.style.opacity = '0';
+            loginScreen.style.visibility = 'hidden';
+            
+            // Show main content with animation
+            mainContent.style.opacity = '1';
+            mainContent.style.transform = 'translateY(0)';
+            
+            // Create floating particles
+            createParticles();
+            
+            // Initialize the game
+            initGame();
+            
+            // Iniciar música de fundo
+            const backgroundMusic = document.getElementById('background-music');
+            backgroundMusic.volume = 0.5;
+            backgroundMusic.play();
+            
+            // Iniciar carrossel
+            initCarousel();
+            
+            // Iniciar animações de scroll
+            initScrollAnimations();
+        });
+
+        // ===== MENU HAMBÚRGUER =====
+        const menuToggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('nav');
+        
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+
+        // ===== CONTROLES DE MÚSICA =====
+        const backgroundMusic = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const muteBtn = document.getElementById('mute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        
+        playPauseBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                this.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                backgroundMusic.pause();
+                this.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        muteBtn.addEventListener('click', function() {
+            if (backgroundMusic.muted) {
+                backgroundMusic.muted = false;
+                this.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                backgroundMusic.muted = true;
+                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        });
+        
+        volumeSlider.addEventListener('input', function() {
+            backgroundMusic.volume = this.value;
+        });
+
+        // ===== CARROSSEL =====
+        function initCarousel() {
+            const carousel = document.getElementById('carousel');
+            const items = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            const prevControl = document.getElementById('prev-control');
+            const nextControl = document.getElementById('next-control');
+            
+            let currentIndex = 0;
+            const totalItems = items.length;
+            
+            // Função para atualizar o carrossel
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+                
+                // Atualizar indicadores
+                indicators.forEach((indicator, index) => {
+                    if (index === currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Avançar para o próximo slide
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarousel();
+            }
+            
+            // Voltar para o slide anterior
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                updateCarousel();
+            }
+            
+            // Event listeners para os controles
+            nextControl.addEventListener('click', nextSlide);
+            prevControl.addEventListener('click', prevSlide);
+            
+            // Event listeners para os indicadores
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCarousel();
+                });
+            });
+            
+            // Auto-avanço do carrossel
+            setInterval(nextSlide, 5000);
+        }
+
+        // ===== ANIMAÇÕES DE SCROLL =====
+        function initScrollAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            function checkScroll() {
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight * 0.85) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Verificar scroll inicial
+            checkScroll();
+            
+            // Verificar scroll durante a rolagem
+            window.addEventListener('scroll', checkScroll);
+        }
+
+        // ===== PARTICLE ANIMATION =====
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 3 and 8 pixels
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
         // ===== SISTEMA DE TAREFAS =====
         function openTaskModal(category) {
             document.getElementById('taskModal').style.display = 'flex';
@@ -877,8 +1759,27 @@
             // Fechar modal e limpar formulário
             closeTaskModal();
             
-            // Mostrar mensagem de sucesso
-            alert('Tarefa adicionada com sucesso!');
+            // Mostrar mensagem de sucesso com animação
+            const successMsg = document.createElement('div');
+            successMsg.textContent = 'Tarefa adicionada com sucesso!';
+            successMsg.style.position = 'fixed';
+            successMsg.style.bottom = '20px';
+            successMsg.style.right = '20px';
+            successMsg.style.background = 'var(--if-green)';
+            successMsg.style.color = 'white';
+            successMsg.style.padding = '1rem';
+            successMsg.style.borderRadius = '5px';
+            successMsg.style.zIndex = '1000';
+            successMsg.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            document.body.appendChild(successMsg);
+            
+            // Remove message after 3 seconds
+            setTimeout(() => {
+                successMsg.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(successMsg);
+                }, 500);
+            }, 3000);
         });
 
         function completeTask(button) {
@@ -894,17 +1795,32 @@
             
             // Verificar se precisa mostrar a mensagem de lista vazia
             checkEmptyTasks();
+            
+            // Animation
+            gsap.fromTo(taskItem, 
+                { scale: 0.8, opacity: 0 }, 
+                { scale: 1, opacity: 1, duration: 0.5 }
+            );
         }
 
         function deleteTask(button) {
             const taskItem = button.closest('.task-item');
             const isCompleted = taskItem.classList.contains('completed');
-            taskItem.remove();
             
-            // Verificar se precisa mostrar a mensagem de lista vazia
-            if (isCompleted) {
-                checkEmptyTasks();
-            }
+            // Animation
+            gsap.to(taskItem, {
+                opacity: 0,
+                scale: 0,
+                duration: 0.3,
+                onComplete: () => {
+                    taskItem.remove();
+                    
+                    // Verificar se precisa mostrar a mensagem de lista vazia
+                    if (isCompleted) {
+                        checkEmptyTasks();
+                    }
+                }
+            });
         }
 
         function checkEmptyTasks() {
@@ -955,7 +1871,7 @@
         function initGame() {
             // Configurar a cena
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x222222);
+            scene.background = new THREE.Color(0x111122);
 
             // Configurar a câmera
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -974,6 +1890,10 @@
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(0, 10, 5);
             scene.add(directionalLight);
+
+            const pointLight = new THREE.PointLight(0x4361ee, 1, 100);
+            pointLight.position.set(0, 5, 5);
+            scene.add(pointLight);
 
             // Criar a mesa de ping pong
             createTable();
@@ -1097,6 +2017,12 @@
                     ballSpeedZ *= 1.05;
                     
                     document.getElementById('speed').textContent = (ballSpeedX / 0.05).toFixed(1) + 'x';
+                    
+                    // Efeito visual na raquete
+                    paddleLeft.material.color.set(0x00ff00);
+                    setTimeout(() => {
+                        paddleLeft.material.color.set(0xFFD700);
+                    }, 100);
                 }
 
                 // Verificar colisão com a raquete direita (IA)
@@ -1108,6 +2034,12 @@
                     ball.position.y > paddleRight.position.y - paddleHeight/2) {
                     
                     ballSpeedX = -Math.abs(ballSpeedX); // Mover para a esquerda
+                    
+                    // Efeito visual na raquete
+                    paddleRight.material.color.set(0x0044ff);
+                    setTimeout(() => {
+                        paddleRight.material.color.set(0x4361ee);
+                    }, 100);
                 }
 
                 // IA simples para a raquete direita
@@ -1123,6 +2055,10 @@
                     resetGame();
                 }
             }
+
+            // Rotação suave da câmera
+            camera.position.x = Math.sin(Date.now() * 0.0002) * 5;
+            camera.lookAt(scene.position);
 
             renderer.render(scene, camera);
         }
@@ -1161,6 +2097,14 @@
                 resetGame();
                 this.textContent = ' Jogo Iniciado';
                 this.disabled = true;
+                
+                // Efeito visual
+                gsap.to(this, {
+                    scale: 1.1,
+                    duration: 0.2,
+                    yoyo: true,
+                    repeat: 1
+                });
             }
         });
 
@@ -1170,6 +2114,14 @@
             gameRunning = true;
             document.getElementById('start-game').textContent = ' Jogo Iniciado';
             document.getElementById('start-game').disabled = true;
+            
+            // Efeito visual
+            gsap.to(this, {
+                scale: 1.1,
+                duration: 0.2,
+                yoyo: true,
+                repeat: 1
+            });
         });
 
         // Redimensionar o jogo quando a janela para redimensionada
@@ -1181,9 +2133,8 @@
             }
         });
 
-        // Inicializar o jogo quando a página carregar
+        // Verificar tarefas vazias ao carregar
         window.onload = function() {
-            initGame();
             checkEmptyTasks();
         };
     </script>
