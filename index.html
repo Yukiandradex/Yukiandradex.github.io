@@ -1518,47 +1518,46 @@
 
     <!-- Floating particles -->
     <div class="particles" id="particles"></div>
+<!-- Áudio para música de fundo -->
+<audio id="background-music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a77c43bb9.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+    Seu navegador não suporta o elemento de áudio.
+</audio>
 
-    <!-- Áudio para música de fundo -->
-    <audio id="background-music" loop>
-        <source src="https://pixabay.com/music/beats-lofi-ambiental-music-for-study-141222/">
-        Seu navegador não suporta o elemento de áudio.
-    </audio>
+<script>
+const audio = document.getElementById('background-music');
+audio.volume = 0; // começar mudo
 
-    <script>
-        // ===== LOGIN SYSTEM =====
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simulate login process
-            const loginScreen = document.getElementById('login-screen');
-            const mainContent = document.getElementById('main-content');
-            
-            // Add fade out effect to login screen
-            loginScreen.style.opacity = '0';
-            loginScreen.style.visibility = 'hidden';
-            
-            // Show main content with animation
-            mainContent.style.opacity = '1';
-            mainContent.style.transform = 'translateY(0)';
-            
-            // Create floating particles
-            createParticles();
-            
-            // Initialize the game
-            initGame();
-            
-            // Iniciar música de fundo
-            const backgroundMusic = document.getElementById('background-music');
-            backgroundMusic.volume = 0.5;
-            backgroundMusic.play();
-            
-            // Iniciar carrossel
-            initCarousel();
-            
-            // Iniciar animações de scroll
-            initScrollAnimations();
-        });
+// Função para tocar música com fade-in
+function playMusicWithFade(targetVolume = 0.5, fadeDuration = 2000) {
+    audio.play().then(() => {
+        let vol = 0;
+        const step = targetVolume / (fadeDuration / 50); // aumenta a cada 50ms
+        const fadeInterval = setInterval(() => {
+            if (vol < targetVolume) {
+                vol += step;
+                audio.volume = Math.min(vol, targetVolume);
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 50);
+    }).catch(err => {
+        console.log('Erro ao tentar tocar a música:', err);
+    });
+}
+
+// Espera interação mínima do usuário para desbloquear áudio
+function unlockAudio() {
+    playMusicWithFade(0.5, 2000);
+    window.removeEventListener('click', unlockAudio);
+    window.removeEventListener('keydown', unlockAudio);
+}
+
+// Qualquer clique ou tecla inicia a música
+window.addEventListener('click', unlockAudio);
+window.addEventListener('keydown', unlockAudio);
+</script>
+
 
         // ===== MENU HAMBÚRGUER =====
         const menuToggle = document.getElementById('menu-toggle');
