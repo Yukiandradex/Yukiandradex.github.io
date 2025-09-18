@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Bite </title>
+    <title>One Bite - Com Carrossel e Música</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
@@ -1472,7 +1472,7 @@
     </div>
 
     <footer>
-        <p>One Bite &copy; 2025 - Sistema de Organização de Tarefas</p>
+        <p>IF Task-JaPong 3D &copy; 2025 - Sistema de Organização de Tarefas</p>
         <p>Desenvolvido para os alunos do IF Catalão; 
             <p>Créditos; Beicin, Champola, Sabugo, Furtado, Japa, Schons! </p>
     </footer>
@@ -1520,44 +1520,84 @@
     <div class="particles" id="particles"></div>
 
     <!-- Áudio para música de fundo -->
-   <!-- Áudio para música de fundo -->
-<audio id="background-music" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a77c43bb9.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
-    Seu navegador não suporta o elemento de áudio.
-</audio>
+    <audio id="background-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/01/20/audio_5e6f432fa5.mp3?filename=relaxing-music-meditation-121679.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
 
-<script>
-const backgroundMusic = document.getElementById('background-music');
-backgroundMusic.volume = 0; // Começa mudo
+    <script>
+        // ===== LOGIN SYSTEM =====
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate login process
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Add fade out effect to login screen
+            loginScreen.style.opacity = '0';
+            loginScreen.style.visibility = 'hidden';
+            
+            // Show main content with animation
+            mainContent.style.opacity = '1';
+            mainContent.style.transform = 'translateY(0)';
+            
+            // Create floating particles
+            createParticles();
+            
+            // Initialize the game
+            initGame();
+            
+            // Iniciar música de fundo
+            const backgroundMusic = document.getElementById('background-music');
+            backgroundMusic.volume = 0.5;
+            backgroundMusic.play();
+            
+            // Iniciar carrossel
+            initCarousel();
+            
+            // Iniciar animações de scroll
+            initScrollAnimations();
+        });
 
-// Função para tocar música com fade-in
-function playMusicWithFade(targetVolume = 0.5, fadeDuration = 2000) {
-    backgroundMusic.play().then(() => {
-        let vol = 0;
-        const step = targetVolume / (fadeDuration / 50); // Aumenta a cada 50ms
-        const fadeInterval = setInterval(() => {
-            if (vol < targetVolume) {
-                vol += step;
-                backgroundMusic.volume = Math.min(vol, targetVolume);
+        // ===== MENU HAMBÚRGUER =====
+        const menuToggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('nav');
+        
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+
+        // ===== CONTROLES DE MÚSICA =====
+        const backgroundMusic = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const muteBtn = document.getElementById('mute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        
+        playPauseBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                this.innerHTML = '<i class="fas fa-pause"></i>';
             } else {
-                clearInterval(fadeInterval);
+                backgroundMusic.pause();
+                this.innerHTML = '<i class="fas fa-play"></i>';
             }
-        }, 50);
-    }).catch(err => {
-        console.log('Não foi possível tocar a música automaticamente:', err);
-    });
-}
-
-// Tocar música após interação mínima do usuário
-function unlockAudio() {
-    playMusicWithFade(0.5, 2000);
-    window.removeEventListener('click', unlockAudio);
-    window.removeEventListener('keydown', unlockAudio);
-}
-
-// Eventos que liberam o áudio
-window.addEventListener('click', unlockAudio);
-window.addEventListener('keydown', unlockAudio);
+        });
+        
+        muteBtn.addEventListener('click', function() {
+            if (backgroundMusic.muted) {
+                backgroundMusic.muted = false;
+                this.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                backgroundMusic.muted = true;
+                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        });
+        
+        volumeSlider.addEventListener('input', function() {
+            backgroundMusic.volume = this.value;
+        });
 
         // ===== CARROSSEL =====
         function initCarousel() {
