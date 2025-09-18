@@ -1525,25 +1525,24 @@
 
 
 
-    
- <!-- Áudio para música de fundo -->
+    <!-- Áudio para música de fundo -->
 <audio id="background-music" loop>
     <source src="https://cdn.pixabay.com/download/audio/2023/04/06/audio_d16713dc98.mp3?filename=lofi-chill-medium-version-159456.mp3" type="audio/mpeg">
     Seu navegador não suporta o elemento de áudio.
 </audio>
 
 <!-- Mensagem de interação -->
-<div class="interaction-message" id="interaction-message">
-    Clique em qualquer lugar para ativar a música
+<div id="music-prompt" style="position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.8);color:white;padding:10px 15px;border-radius:8px;cursor:pointer;z-index:1000;">
+    Clique aqui para ativar a música
 </div>
 
 <script>
     // ===== VARIÁVEIS =====
     const backgroundMusic = document.getElementById('background-music');
-    const interactionMessage = document.getElementById('interaction-message');
+    const musicPrompt = document.getElementById('music-prompt');
     let musicStarted = false;
 
-    // ===== FUNÇÃO PARA INICIAR MÚSICA COM FADE-IN =====
+    // ===== FUNÇÃO PARA TOCAR MÚSICA COM FADE-IN =====
     function startMusic() {
         if (musicStarted) return;
 
@@ -1553,9 +1552,9 @@
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 musicStarted = true;
-                interactionMessage.style.display = 'none';
+                musicPrompt.style.display = 'none';
 
-                // Fade-in suave
+                // fade-in suave
                 let vol = 0;
                 const fadeInterval = setInterval(() => {
                     if (vol < 0.5) {
@@ -1566,14 +1565,14 @@
                     }
                 }, 50);
             }).catch(error => {
-                console.log('Não foi possível reproduzir a música automaticamente:', error);
-                interactionMessage.style.display = 'block';
+                console.log('Erro ao tocar música:', error);
+                musicPrompt.style.display = 'block';
             });
         }
     }
 
-    // ===== INICIAR MÚSICA COM INTERAÇÃO =====
-    document.addEventListener('click', startMusic);
+    // ===== ATIVAR MÚSICA COM INTERAÇÃO DO USUÁRIO =====
+    musicPrompt.addEventListener('click', startMusic);
     document.addEventListener('keydown', startMusic);
 
     // ===== LOGIN =====
@@ -1595,7 +1594,7 @@
         initCarousel();
         initScrollAnimations();
 
-        // Tenta iniciar música após login
+        // Tenta tocar música após login
         setTimeout(startMusic, 500);
     });
 
@@ -1631,10 +1630,7 @@
         this.classList.toggle('active');
         nav.classList.toggle('active');
     });
-
-
-
-
+</script>
 
 
 
