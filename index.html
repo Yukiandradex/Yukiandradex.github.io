@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Bite</title>
+    <title>One Bite </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
@@ -1210,7 +1210,7 @@
         <header>
             <div class="logo-onebit">
                 <i class="fas fa-star"></i>
-                <span></span>
+                <span>Logo One Bit</span>
             </div>
             <div class="logo">
                 <i class="fas fa-table-tennis"></i>
@@ -1472,7 +1472,7 @@
     </div>
 
     <footer>
-        <p>One Bit &copy; 2025 - Sistema de Organização de Tarefas</p>
+        <p>One Bite &copy; 2025 - Sistema de Organização de Tarefas</p>
         <p>Desenvolvido para os alunos do IF Catalão; 
             <p>Créditos; Beicin, Champola, Sabugo, Furtado, Japa, Schons! </p>
     </footer>
@@ -1518,7 +1518,9 @@
 
     <!-- Floating particles -->
     <div class="particles" id="particles"></div>
-<!-- Áudio para música de fundo -->
+
+    <!-- Áudio para música de fundo -->
+   <!-- Áudio para música de fundo -->
 <audio id="background-music" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a77c43bb9.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
     Seu navegador não suporta o elemento de áudio.
@@ -1556,47 +1558,6 @@ function unlockAudio() {
 // Eventos que liberam o áudio
 window.addEventListener('click', unlockAudio);
 window.addEventListener('keydown', unlockAudio);
-</script>
-
-
-        // ===== MENU HAMBÚRGUER =====
-        const menuToggle = document.getElementById('menu-toggle');
-        const nav = document.getElementById('nav');
-        
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            nav.classList.toggle('active');
-        });
-
-        // ===== CONTROLES DE MÚSICA =====
-        const backgroundMusic = document.getElementById('background-music');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const muteBtn = document.getElementById('mute-btn');
-        const volumeSlider = document.getElementById('volume-slider');
-        
-        playPauseBtn.addEventListener('click', function() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                this.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                backgroundMusic.pause();
-                this.innerHTML = '<i class="fas fa-play"></i>';
-            }
-        });
-        
-        muteBtn.addEventListener('click', function() {
-            if (backgroundMusic.muted) {
-                backgroundMusic.muted = false;
-                this.innerHTML = '<i class="fas fa-volume-up"></i>';
-            } else {
-                backgroundMusic.muted = true;
-                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            }
-        });
-        
-        volumeSlider.addEventListener('input', function() {
-            backgroundMusic.volume = this.value;
-        });
 
         // ===== CARROSSEL =====
         function initCarousel() {
