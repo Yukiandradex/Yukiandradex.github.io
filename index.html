@@ -1519,85 +1519,125 @@
     <!-- Floating particles -->
     <div class="particles" id="particles"></div>
 
-    <!-- Áudio para música de fundo -->
-    <audio id="background-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/01/20/audio_5e6f432fa5.mp3?filename=relaxing-music-meditation-121679.mp3" type="audio/mpeg">
-        Seu navegador não suporta o elemento de áudio.
-    </audio>
 
-    <script>
-        // ===== LOGIN SYSTEM =====
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simulate login process
-            const loginScreen = document.getElementById('login-screen');
-            const mainContent = document.getElementById('main-content');
-            
-            // Add fade out effect to login screen
-            loginScreen.style.opacity = '0';
-            loginScreen.style.visibility = 'hidden';
-            
-            // Show main content with animation
-            mainContent.style.opacity = '1';
-            mainContent.style.transform = 'translateY(0)';
-            
-            // Create floating particles
-            createParticles();
-            
-            // Initialize the game
-            initGame();
-            
-            // Iniciar música de fundo
-            const backgroundMusic = document.getElementById('background-music');
-            backgroundMusic.volume = 0.5;
-            backgroundMusic.play();
-            
-            // Iniciar carrossel
-            initCarousel();
-            
-            // Iniciar animações de scroll
-            initScrollAnimations();
-        });
 
-        // ===== MENU HAMBÚRGUER =====
-        const menuToggle = document.getElementById('menu-toggle');
-        const nav = document.getElementById('nav');
-        
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            nav.classList.toggle('active');
-        });
 
-        // ===== CONTROLES DE MÚSICA =====
-        const backgroundMusic = document.getElementById('background-music');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const muteBtn = document.getElementById('mute-btn');
-        const volumeSlider = document.getElementById('volume-slider');
-        
-        playPauseBtn.addEventListener('click', function() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                this.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                backgroundMusic.pause();
-                this.innerHTML = '<i class="fas fa-play"></i>';
-            }
-        });
-        
-        muteBtn.addEventListener('click', function() {
-            if (backgroundMusic.muted) {
-                backgroundMusic.muted = false;
-                this.innerHTML = '<i class="fas fa-volume-up"></i>';
-            } else {
-                backgroundMusic.muted = true;
-                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            }
-        });
-        
-        volumeSlider.addEventListener('input', function() {
-            backgroundMusic.volume = this.value;
-        });
+
+
+
+    
+ <!-- Áudio para música de fundo -->
+<audio id="background-music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/04/06/audio_d16713dc98.mp3?filename=lofi-chill-medium-version-159456.mp3" type="audio/mpeg">
+    Seu navegador não suporta o elemento de áudio.
+</audio>
+
+<!-- Mensagem de interação -->
+<div class="interaction-message" id="interaction-message">
+    Clique em qualquer lugar para ativar a música
+</div>
+
+<script>
+    // ===== VARIÁVEIS =====
+    const backgroundMusic = document.getElementById('background-music');
+    const interactionMessage = document.getElementById('interaction-message');
+    let musicStarted = false;
+
+    // ===== FUNÇÃO PARA INICIAR MÚSICA COM FADE-IN =====
+    function startMusic() {
+        if (musicStarted) return;
+
+        backgroundMusic.volume = 0; // começa mudo
+        const playPromise = backgroundMusic.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                musicStarted = true;
+                interactionMessage.style.display = 'none';
+
+                // Fade-in suave
+                let vol = 0;
+                const fadeInterval = setInterval(() => {
+                    if (vol < 0.5) {
+                        vol += 0.01;
+                        backgroundMusic.volume = vol;
+                    } else {
+                        clearInterval(fadeInterval);
+                    }
+                }, 50);
+            }).catch(error => {
+                console.log('Não foi possível reproduzir a música automaticamente:', error);
+                interactionMessage.style.display = 'block';
+            });
+        }
+    }
+
+    // ===== INICIAR MÚSICA COM INTERAÇÃO =====
+    document.addEventListener('click', startMusic);
+    document.addEventListener('keydown', startMusic);
+
+    // ===== LOGIN =====
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const loginScreen = document.getElementById('login-screen');
+        const mainContent = document.getElementById('main-content');
+
+        // Fade out login e mostrar conteúdo principal
+        loginScreen.style.opacity = '0';
+        loginScreen.style.visibility = 'hidden';
+        mainContent.style.opacity = '1';
+        mainContent.style.transform = 'translateY(0)';
+
+        // Inicializações do site
+        createParticles();
+        initGame();
+        initCarousel();
+        initScrollAnimations();
+
+        // Tenta iniciar música após login
+        setTimeout(startMusic, 500);
+    });
+
+    // ===== CONTROLES DE MÚSICA =====
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const muteBtn = document.getElementById('mute-btn');
+    const volumeSlider = document.getElementById('volume-slider');
+
+    playPauseBtn.addEventListener('click', function() {
+        if (backgroundMusic.paused) {
+            startMusic();
+            this.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            backgroundMusic.pause();
+            this.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    });
+
+    muteBtn.addEventListener('click', function() {
+        backgroundMusic.muted = !backgroundMusic.muted;
+        this.innerHTML = backgroundMusic.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    });
+
+    volumeSlider.addEventListener('input', function() {
+        backgroundMusic.volume = this.value;
+    });
+
+    // ===== MENU HAMBÚRGUER =====
+    const menuToggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav');
+
+    menuToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        nav.classList.toggle('active');
+    });
+
+
+
+
+
+
+
 
         // ===== CARROSSEL =====
         function initCarousel() {
