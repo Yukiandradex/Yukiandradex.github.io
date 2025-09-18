@@ -1525,35 +1525,35 @@
 </audio>
 
 <script>
-const audio = document.getElementById('background-music');
-audio.volume = 0; // começar mudo
+const backgroundMusic = document.getElementById('background-music');
+backgroundMusic.volume = 0; // Começa mudo
 
 // Função para tocar música com fade-in
 function playMusicWithFade(targetVolume = 0.5, fadeDuration = 2000) {
-    audio.play().then(() => {
+    backgroundMusic.play().then(() => {
         let vol = 0;
-        const step = targetVolume / (fadeDuration / 50); // aumenta a cada 50ms
+        const step = targetVolume / (fadeDuration / 50); // Aumenta a cada 50ms
         const fadeInterval = setInterval(() => {
             if (vol < targetVolume) {
                 vol += step;
-                audio.volume = Math.min(vol, targetVolume);
+                backgroundMusic.volume = Math.min(vol, targetVolume);
             } else {
                 clearInterval(fadeInterval);
             }
         }, 50);
     }).catch(err => {
-        console.log('Erro ao tentar tocar a música:', err);
+        console.log('Não foi possível tocar a música automaticamente:', err);
     });
 }
 
-// Espera interação mínima do usuário para desbloquear áudio
+// Tocar música após interação mínima do usuário
 function unlockAudio() {
     playMusicWithFade(0.5, 2000);
     window.removeEventListener('click', unlockAudio);
     window.removeEventListener('keydown', unlockAudio);
 }
 
-// Qualquer clique ou tecla inicia a música
+// Eventos que liberam o áudio
 window.addEventListener('click', unlockAudio);
 window.addEventListener('keydown', unlockAudio);
 </script>
