@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Bite</title>
+    <title>One Bit - Sistema Educacional</title>
     <link rel="icon" type="image/png" href="logo-onebit.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
         :root {
-            --if-green: #006400;
-            --if-gold: #FFD700;
-            --if-blue: #005792;
-            --if-red: #B22222;
-            --if-orange: #FF8C00;
-            --if-purple: #7209b7;
+            --primary-green: #00ff88;
+            --secondary-green: #00cc66;
+            --dark-green: #006633;
+            --accent-blue: #00a8ff;
+            --accent-purple: #9c27b0;
+            --accent-gold: #ffd700;
             --light: #f8f9fa;
-            --dark: #212529;
+            --dark: #0a0a0a;
             --transition: all 0.3s ease;
-            --neon-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--if-blue), 0 0 20px var(--if-blue);
+            --neon-glow: 0 0 10px var(--primary-green), 0 0 20px var(--primary-green), 0 0 30px var(--primary-green);
         }
 
         * {
@@ -31,11 +31,19 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background: linear-gradient(135deg, #001a00, #003300, #004d00, #006600);
             color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            animation: gradientShift 10s ease infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         body::before {
@@ -45,9 +53,38 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23005171" fill-opacity="0.1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,224C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-            background-size: cover;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(156, 39, 176, 0.05) 0%, transparent 50%);
             z-index: -1;
+        }
+
+        .glowing-border {
+            position: relative;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue), var(--accent-purple));
+            background-clip: padding-box;
+            border-radius: 15px;
+        }
+
+        .glowing-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue), var(--accent-purple));
+            border-radius: 17px;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+            filter: blur(10px);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Login Screen */
@@ -57,7 +94,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background: linear-gradient(135deg, #001a00, #003300, #004d00);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,14 +103,14 @@
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 20, 0, 0.8);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 3rem;
             width: 90%;
             max-width: 450px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--neon-glow);
+            border: 1px solid rgba(0, 255, 136, 0.3);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -86,7 +123,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
             transform: rotate(45deg);
             animation: shine 3s infinite;
         }
@@ -97,43 +134,44 @@
         }
 
         .login-logo {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
             font-size: 2.5rem;
             font-weight: 700;
-            color: white;
+            color: var(--primary-green);
             text-shadow: var(--neon-glow);
         }
 
         .login-logo i {
-            color: var(--if-gold);
+            color: var(--accent-gold);
             animation: bounce 2s infinite;
         }
 
         .login-form {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.5rem;
         }
 
         .form-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 1rem 1.2rem;
+            background: rgba(0, 40, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 1rem 1.5rem;
             border-radius: 50px;
-            color: white;
+            color: var(--light);
             font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             outline: none;
             transition: all 0.3s;
         }
 
         .form-input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(0, 131, 255, 0.5);
+            background: rgba(0, 60, 0, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            border-color: var(--primary-green);
         }
 
         .form-input::placeholder {
@@ -141,52 +179,55 @@
         }
 
         .login-btn {
-            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
-            color: white;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            color: var(--dark);
             border: none;
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
             transition: all 0.3s;
             margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .login-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 131, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.6);
+            background: linear-gradient(45deg, var(--secondary-green), var(--primary-green));
         }
 
         .login-footer {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
         }
 
         /* Main Content */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 2rem;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         header {
-            background: linear-gradient(135deg, var(--if-green), var(--if-blue));
+            background: linear-gradient(135deg, var(--dark-green), var(--secondary-green));
             color: white;
-            padding: 1.5rem;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--neon-glow);
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
         }
 
         header::before {
@@ -196,8 +237,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, transparent 20%, var(--if-gold) 20%, transparent 21%);
-            background-size: 20px 20px;
+            background: radial-gradient(circle, transparent 20%, var(--accent-gold) 20%, transparent 21%);
+            background-size: 30px 30px;
             opacity: 0.1;
             transform: rotate(30deg);
         }
@@ -206,536 +247,316 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            font-size: 2rem;
-            font-weight: 700;
+            gap: 20px;
+            font-size: 3rem;
+            font-weight: 800;
             margin-bottom: 1rem;
             position: relative;
+            text-shadow: var(--neon-glow);
         }
 
         .logo i {
-            color: var(--if-gold);
+            color: var(--accent-gold);
             animation: bounce 2s infinite;
         }
 
         .logo-onebit {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--if-gold);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            top: 20px;
+            left: 20px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-shadow: var(--neon-glow);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .user-avatar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: var(--neon-glow);
+            border: 2px solid var(--accent-gold);
+        }
+
+        .avatar-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border-top: 5px solid var(--if-green);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 30, 0, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-blue), var(--accent-purple));
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--neon-glow);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
         }
 
         .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--if-gold);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .points-system {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .point-item {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            border-left: 4px solid var(--if-green);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .point-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-        }
-
-        .point-item h3 {
-            color: var(--if-gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .point-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--if-green);
-            text-shadow: 0 0 10px rgba(0, 100, 0, 0.5);
-        }
-
-        .ranking {
-            margin-top: 1.5rem;
-        }
-
-        .ranking-item {
-            display: flex;
-            align-items: center;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border-left: 4px solid var(--if-gold);
-            transition: transform 0.3s;
-        }
-
-        .ranking-item:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .ranking-position {
-            width: 30px;
-            height: 30px;
-            background-color: var(--if-green);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            margin-right: 1rem;
-        }
-
-        .ranking-1 .ranking-position {
-            background-color: gold;
-            color: black;
-            box-shadow: 0 0 10px gold;
-        }
-
-        .ranking-2 .ranking-position {
-            background-color: silver;
-            color: black;
-            box-shadow: 0 0 10px silver;
-        }
-
-        .ranking-3 .ranking-position {
-            background-color: #cd7f32;
-            color: black;
-            box-shadow: 0 0 10px #cd7f32;
-        }
-
-        .ranking-info {
-            flex-grow: 1;
-        }
-
-        .ranking-name {
-            font-weight: 600;
-            color: white;
-        }
-
-        .ranking-score {
-            color: var(--if-gold);
-            font-weight: 500;
-        }
-
-        .class-ranking {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .class-item {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid var(--if-green);
-            transition: all 0.3s;
-        }
-
-        .class-item:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 15px rgba(0, 100, 0, 0.5);
-        }
-
-        .class-position {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--if-green);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(0, 100, 0, 0.5);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        .class-name {
-            font-weight: 600;
-            color: var(--if-gold);
-        }
-
-        .pingpong {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, var(--if-green), var(--if-blue));
-            color: white;
+        /* CALENDÁRIO */
+        .calendar {
+            width: 100%;
+            background: rgba(0, 40, 0, 0.6);
             border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .pingpong::before {
-            content: "🏓";
-            position: absolute;
-            font-size: 5rem;
-            opacity: 0.1;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .pingpong h2 {
-            margin-bottom: 1rem;
-            position: relative;
-            text-shadow: var(--neon-glow);
-        }
-
-        .pingpong p {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            font-style: italic;
-        }
-
-        footer {
-            background: rgba(0, 100, 0, 0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-align: center;
             padding: 1.5rem;
-            margin-top: 2rem;
-            border-radius: 15px 15px 0 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        /* Jogo de Ping Pong 3D */
-        #game-container {
-            width: 100%;
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        #game-canvas {
-            width: 100%;
-            height: 400px;
-            background: #111;
-            border-radius: 10px;
-            margin: 0 auto;
-            display: block;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .game-controls {
-            margin-top: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .btn-game {
-            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-
-        .btn-game:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-game.start {
-            background: linear-gradient(45deg, var(--if-green), #00c853);
-        }
-
-        .btn-game.reset {
-            background: linear-gradient(45deg, var(--if-red), #ff5252);
-        }
-
-        .score-display {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            color: var(--if-gold);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .instructions {
-            background: linear-gradient(135deg, var(--if-purple), #4361ee);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-top: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .instructions h3 {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .instructions ul {
-            list-style: none;
-            text-align: left;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .instructions li {
-            margin-bottom: 0.8rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .instructions li:before {
-            content: "•";
-            color: var(--if-gold);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-
-        /* Tabs de Tarefas */
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-            border-bottom: 2px solid var(--if-green);
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px 5px 0 0;
-            margin-right: 0.5rem;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background-color: var(--if-green);
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .task-list {
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        .task-item {
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 4px solid var(--if-green);
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.3s;
-        }
-
-        .task-item:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .task-item.completed {
-            opacity: 0.7;
-            text-decoration: line-through;
-            border-left: 4px solid var(--if-gold);
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .task-actions button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.3s;
-        }
-
-        .task-actions button:hover {
-            transform: scale(1.2);
-        }
-
-        .complete-task {
-            color: var(--if-green);
-        }
-
-        .delete-task {
-            color: var(--if-red);
-        }
-
-        /* Modal para adicionar tarefas */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: rgba(30, 30, 40, 0.9);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .modal-header {
+        .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
         }
 
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .calendar-nav-btn {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--primary-green);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            color: var(--if-gold);
+            transition: all 0.3s;
         }
 
-        .form-group {
+        .calendar-nav-btn:hover {
+            background: rgba(0, 255, 136, 0.4);
+            transform: scale(1.1);
+        }
+
+        .calendar-current {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
             margin-bottom: 1rem;
         }
 
-        .form-group label {
-            display: block;
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent-gold);
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .calendar-day:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: scale(1.1);
+        }
+
+        .calendar-day.other-month {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue));
+            color: var(--dark);
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .calendar-day.has-tasks::after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        .calendar-tasks {
+            margin-top: 1.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .calendar-tasks h4 {
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .task-item {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--if-gold);
+            border-left: 3px solid var(--primary-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            font-size: 1rem;
-            color: white;
+        .task-item:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateX(5px);
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: var(--if-blue);
-            box-shadow: 0 0 10px rgba(0, 131, 255, 0.5);
+        /* TASK DIÁRIA */
+        .daily-tasks {
+            margin-top: 1.5rem;
         }
 
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
+        .time-slot {
+            background: rgba(0, 40, 0, 0.6);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .time-range {
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-green);
             border-radius: 4px;
             cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            transition: all 0.3s;
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
-            color: white;
+        .task-checkbox.checked {
+            background: var(--primary-green);
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(45deg, var(--if-blue), var(--if-green));
+        .task-checkbox.checked::after {
+            content: "✓";
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        .task-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .task-text {
+            flex: 1;
         }
 
         .add-task-btn {
@@ -744,287 +565,320 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(45deg, var(--if-green), var(--if-blue));
-            color: white;
-            padding: 0.75rem;
-            border-radius: 4px;
+            gap: 0.8rem;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue));
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .add-task-btn:hover {
-            background: linear-gradient(45deg, var(--if-blue), var(--if-green));
+            background: linear-gradient(45deg, var(--accent-blue), var(--primary-green));
             transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
         }
 
-        .empty-tasks {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            padding: 2rem;
-            font-style: italic;
+        /* PAINEL DE AVISOS */
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
-        /* Floating particles */
-        .particles {
-            position: fixed;
+        .announcement-card {
+            background: rgba(0, 40, 0, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .announcement-card::before {
+            content: "";
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
         }
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Floating animation for cards */
-        @keyframes float-card {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .floating {
-            animation: float-card 6s ease-in-out infinite;
-        }
-
-        /* Neon text effect */
-        .neon-text {
-            color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--if-blue), 0 0 20px var(--if-blue);
-        }
-
-        /* Glow effect */
-        .glow {
-            box-shadow: 0 0 10px var(--if-green), 0 0 20px var(--if-green), 0 0 30px var(--if-green);
-        }
-
-        /* NOVOS ESTILOS ADICIONADOS */
-        
-        /* Carrossel */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            margin: 3rem auto;
-            overflow: hidden;
-            border-radius: 20px;
+        .announcement-card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
-        .carousel {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        .carousel-item {
-            min-width: 100%;
-            height: 400px;
-            position: relative;
-        }
-
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.7);
-        }
-
-        .carousel-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 2rem;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-            color: var(--light);
-        }
-
-        .carousel-caption h3 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: var(--if-gold);
-        }
-
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            padding: 0 1rem;
-            z-index: 10;
-        }
-
-        .carousel-control {
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--light);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        .announcement-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             font-size: 1.5rem;
-            transition: var(--transition);
+            color: white;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
         }
 
-        .carousel-control:hover {
-            background: var(--if-blue);
-            transform: scale(1.1);
+        .announcement-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.8rem;
         }
 
-        .carousel-indicators {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10;
+        .announcement-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
         }
 
-        .carousel-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+        /* FUNCIONALIDADES */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 40, 0, 0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            transition: all 0.3s;
             cursor: pointer;
-            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
-        .carousel-indicator.active {
-            background: var(--if-gold);
-            transform: scale(1.2);
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
         }
 
-        /* Player de Música */
-        .music-player {
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        /* MENU HAMBÚRGUER */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 35px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 1001;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
+            top: 30px;
+            right: 30px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-gold));
+            border-radius: 3px;
+            transition: var(--transition);
+            box-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -7px);
+        }
+
+        /* NAVEGAÇÃO */
+        nav {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 20, 0, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 8rem 3rem 3rem;
+            z-index: 999;
+            transition: right 0.5s ease;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+            border-left: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        nav.active {
+            right: 0;
+        }
+
+        .nav-user {
             display: flex;
             align-items: center;
             gap: 1rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            z-index: 900;
-            border: 1px solid var(--if-blue);
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
         }
 
-        .music-info {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .music-thumbnail {
-            width: 40px;
-            height: 40px;
+        .nav-avatar {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: var(--if-blue);
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue));
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: rotate 10s linear infinite;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: var(--neon-glow);
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .nav-user-info h3 {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
         }
 
-        .music-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .music-title {
+        .nav-user-info p {
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-bottom: 1rem;
+        }
+
+        nav ul li a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.3rem;
             font-weight: 600;
-            color: var(--light);
-        }
-
-        .music-artist {
-            font-size: 0.8rem;
-            color: var(--if-gold);
-        }
-
-        .music-controls {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
-        .music-btn {
-            background: none;
-            border: none;
-            color: var(--light);
+        nav ul li a:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(-10px);
+            color: var(--primary-green);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        nav ul li a i {
+            width: 25px;
             font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
         }
 
-        .music-btn:hover {
-            color: var(--if-gold);
-            transform: scale(1.1);
+        /* FOOTER */
+        footer {
+            background: rgba(0, 30, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-radius: 20px 20px 0 0;
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard {
+                gap: 1.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .announcements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .menu-toggle {
+                top: 20px;
+                right: 20px;
+            }
         }
 
-        .volume-slider {
-            -webkit-appearance: none;
-            width: 80px;
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            outline: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--if-gold);
-            cursor: pointer;
-        }
-
-        /* Animações de scroll */
+        /* ANIMAÇÕES */
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
@@ -1033,107 +887,33 @@
             transform: translateY(0);
         }
 
-        /* Menu Hambúrguer */
-        .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-            z-index: 1001;
-            position: fixed;
-            top: 25px;
-            right: 25px;
+        .floating {
+            animation: floating 6s ease-in-out infinite;
         }
 
-        .menu-toggle span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: var(--light);
-            border-radius: 3px;
-            transition: var(--transition);
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
 
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+        /* SCROLLBAR PERSONALIZADA */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 30, 0, 0.5);
+            border-radius: 10px;
         }
 
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue));
+            border-radius: 10px;
         }
 
-        /* Navegação */
-        nav {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 300px;
-            height: 100vh;
-            background: rgba(0, 7, 45, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 6rem 2rem 2rem;
-            z-index: 999;
-            transition: right 0.4s ease;
-            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
-        }
-
-        nav.active {
-            right: 0;
-        }
-
-        nav ul {
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-bottom: 1.5rem;
-        }
-
-        nav ul li a {
-            color: var(--light);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 600;
-            display: block;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: var(--transition);
-        }
-
-        nav ul li a:hover {
-            background: rgba(166, 225, 250, 0.1);
-            transform: translateX(5px);
-            color: var(--if-gold);
-        }
-
-        nav ul li a i {
-            margin-right: 0.5rem;
-            width: 25px;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .carousel-item {
-                height: 300px;
-            }
-            
-            .music-player {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                border-radius: 15px;
-                padding: 0.8rem;
-            }
-            
-            .volume-control {
-                display: none;
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--accent-blue), var(--primary-green));
         }
     </style>
 </head>
@@ -1147,604 +927,525 @@
 
     <!-- Navegação -->
     <nav id="nav">
+        <div class="nav-user">
+            <div class="nav-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="nav-user-info">
+                <h3>Emanuel Carvalho</h3>
+                <p>2023109091040009</p>
+            </div>
+        </div>
         <ul>
-            <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="#"><i class="fas fa-tasks"></i> Tarefas</a></li>
-            <li><a href="#"><i class="fas fa-crown"></i> Ranking</a></li>
-            <li><a href="#"><i class="fas fa-gamepad"></i> Ping Pong</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <li><a href="#" onclick="scrollToSection('features')"><i class="fas fa-rocket"></i> Painel de Funcionalidades</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Fórum do Estudante</a></li>
+            <li><a href="#"><i class="fas fa-book"></i> Apostilas</a></li>
+            <li><a href="#"><i class="fas fa-graduation-cap"></i> Jornada do Estudante</a></li>
+            <li><a href="#"><i class="fas fa-calculator"></i> Calculadora</a></li>
+            <li><a href="#"><i class="fas fa-edit"></i> Redação + Corretor IA</a></li>
+            <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 
-    <!-- Player de Música -->
-    <div class="music-player">
-        <div class="music-info">
-            <div class="music-thumbnail">
-                <i class="fas fa-music"></i>
-            </div>
-            <div class="music-details">
-                <div class="music-title">Música Relaxante</div>
-                <div class="music-artist">One Bite</div>
-            </div>
-        </div>
-        <div class="music-controls">
-            <button class="music-btn" id="prev-btn">
-                <i class="fas fa-step-backward"></i>
-            </button>
-            <button class="music-btn" id="play-pause-btn">
-                <i class="fas fa-pause"></i>
-            </button>
-            <button class="music-btn" id="next-btn">
-                <i class="fas fa-step-forward"></i>
-            </button>
-            <div class="volume-control">
-                <button class="music-btn" id="mute-btn">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
-            </div>
-        </div>
-    </div>
-
     <!-- Login Screen -->
     <div id="login-screen">
-        <div class="login-container">
+        <div class="login-container glowing-border">
             <div class="login-logo">
-                <i class="fas fa-table-tennis"></i>
-                <h1>One Bit</h1>
                 <i class="fas fa-graduation-cap"></i>
+                <h1>One Bit</h1>
+                <i class="fas fa-star"></i>
             </div>
             <form class="login-form" id="login-form">
-                <input type="text" class="form-input" placeholder="Usuário" required>
-                <input type="password" class="form-input" placeholder="Senha" required>
-                <button type="submit" class="login-btn">Entrar</button>
+                <input type="text" class="form-input" placeholder="Usuário" id="username" required>
+                <input type="password" class="form-input" placeholder="Senha" id="password" required>
+                <button type="submit" class="login-btn">Entrar no Sistema</button>
             </form>
             <div class="login-footer">
-                <p>One Bit - Sistema de Tarefas</p>
+                <p>Sistema Educacional One Bit - Transformando a educação</p>
             </div>
         </div>
     </div>
 
-    <!-- Main Content (hidden until login) -->
+    <!-- Main Content -->
     <div class="container" id="main-content">
-        <header>
+        <header class="glowing-border">
             <div class="logo-onebit">
                 <i class="fas fa-star"></i>
-        
+                <span>ONE BIT</span>
+            </div>
+            <div class="user-avatar">
+                <div class="avatar-img">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="avatar-name">Emanuel</div>
             </div>
             <div class="logo">
-                <i class="fas fa-table-tennis"></i>
-                <h1>One Bit</h1>
                 <i class="fas fa-graduation-cap"></i>
+                <h1>One Bit</h1>
+                <i class="fas fa-rocket"></i>
             </div>
-            <p>Execute suas tarefas com One Bit</p>
+            <p>Plataforma Educacional Completa - Organize, Estude, Conquiste</p>
         </header>
 
-        <!-- Carrossel Adicionado -->
-        <div class="carousel-container">
-            <div class="carousel" id="carousel">
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Estudantes">
-                    <div class="carousel-caption">
-                        <h3>Bem-vindo ao One Bit</h3>
-                        <p>O sistema completo para gerenciar suas tarefas escolares</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Organização">
-                    <div class="carousel-caption">
-                        <h3>Organize suas Tarefas</h3>
-                        <p>Mantenha-se atualizado com todas as suas atividades</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Ping Pong">
-                    <div class="carousel-caption">
-                        <h3>Jogue Ping Pong</h3>
-                        <p>Descanse e divirta-se com nosso jogo exclusivo</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-controls">
-                <div class="carousel-control" id="prev-control">
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                <div class="carousel-control" id="next-control">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            <div class="carousel-indicators" id="carousel-indicators">
-                <div class="carousel-indicator active"></div>
-                <div class="carousel-indicator"></div>
-                <div class="carousel-indicator"></div>
-            </div>
-        </div>
-
+        <!-- Dashboard Principal -->
         <div class="dashboard">
-            <!-- Conteúdo original do seu site continua aqui -->
-            <div class="card floating">
+            <!-- Calendário -->
+            <div class="card glowing-border fade-in">
                 <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-tasks"></i> Sistema de Pontuação</h2>
+                    <h2 class="card-title"><i class="fas fa-calendar-alt"></i> Calendário Acadêmico</h2>
+                    <i class="fas fa-ellipsis-h"></i>
                 </div>
-                <div class="points-system">
-                    <div class="point-item" onclick="openTaskModal('Moodle EAD')">
-                        <h3>Moodle EAD</h3>
-                        <div class="point-value">20 pts</div>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-nav">
+                            <button class="calendar-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <div class="calendar-current" id="current-month">Junho 2024</div>
+                            <button class="calendar-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <button class="add-task-btn" onclick="openTaskModal()">
+                            <i class="fas fa-plus"></i> Nova Tarefa
+                        </button>
                     </div>
-                    <div class="point-item" onclick="openTaskModal('Prova 1')">
-                        <h3>Prova 1</h3>
-                        <div class="point-value">20 pts</div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Dias da semana -->
+                        <div class="calendar-weekday">Dom</div>
+                        <div class="calendar-weekday">Seg</div>
+                        <div class="calendar-weekday">Ter</div>
+                        <div class="calendar-weekday">Qua</div>
+                        <div class="calendar-weekday">Qui</div>
+                        <div class="calendar-weekday">Sex</div>
+                        <div class="calendar-weekday">Sáb</div>
+                        <!-- Dias do mês serão gerados via JavaScript -->
                     </div>
-                    <div class="point-item" onclick="openTaskModal('Prova 2')">
-                        <h3>Prova 2</h3>
-                        <div class="point-value">20 pts</div>
-                    </div>
-                    <div class="point-item" onclick="openTaskModal('Trabalho')">
-                        <h3>Trabalho</h3>
-                        <div class="point-value">20 pts</div>
-                    </div>
-                    <div class="point-item" onclick="openTaskModal('Atividades em Sala')">
-                        <h3>Atividades em Sala</h3>
-                        <div class="point-value">20 pts</div>
-                    </div>
-                    <div class="point-item" onclick="openTaskModal('Listas')">
-                        <h3>Listas</h3>
-                        <div class="point-value">20 pts</div>
+                    <div class="calendar-tasks">
+                        <h4><i class="fas fa-tasks"></i> Tarefas de Hoje</h4>
+                        <div id="today-tasks">
+                            <!-- Tarefas do dia atual -->
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="tabs">
-                    <div class="tab active" onclick="openTab(event, 'tasks-todo')">A Fazer</div>
-                    <div class="tab" onclick="openTab(event, 'tasks-done')">Concluídas</div>
+            <!-- Task Diária -->
+            <div class="card glowing-border fade-in">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-list-check"></i> Task Diária</h2>
+                    <i class="fas fa-ellipsis-h"></i>
                 </div>
-
-                <div id="tasks-todo" class="tab-content active">
-                    <h3><i class="fas fa-clipboard-list"></i> Tarefas Pendentes</h3>
-                    <ul class="task-list" id="todo-list">
-                        <li class="task-item">
-                            <span>Atividade de Matemática - Lista de exercícios</span>
-                            <div class="task-actions">
-                                <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
-                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                <div class="daily-tasks">
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <span class="time-range">08:00 - 10:00</span>
+                            <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-text">
+                                <strong>Matemática</strong>
+                                <p>Resolver exercícios de álgebra linear</p>
                             </div>
-                        </li>
-                        <li class="task-item">
-                            <span>Projeto de História - Pesquisa sobre Japão</span>
-                            <div class="task-actions">
-                                <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
-                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <span class="time-range">10:30 - 12:00</span>
+                            <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-text">
+                                <strong>Física</strong>
+                                <p>Estudar termodinâmica</p>
                             </div>
-                        </li>
-                    </ul>
-                    <button class="add-task-btn" onclick="openTaskModal('Geral')">
-                        <i class="fas fa-plus"></i> Adicionar Nova Tarefa
+                        </div>
+                    </div>
+                    <div class="time-slot">
+                        <div class="time-header">
+                            <span class="time-range">14:00 - 16:00</span>
+                            <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-text">
+                                <strong>Programação</strong>
+                                <p>Desenvolver projeto web</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-task-btn" onclick="addTimeSlot()">
+                        <i class="fas fa-plus"></i> Adicionar Horário
                     </button>
                 </div>
-
-                <div id="tasks-done" class="tab-content">
-                    <h3><i class="fas fa-check-circle"></i> Tarefas Concluídas</h3>
-                    <ul class="task-list" id="done-list">
-                        <li class="task-item completed">
-                            <span>Relatório de Física - Energia renovável</span>
-                            <div class="task-actions">
-                                <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="empty-tasks" id="empty-completed" style="display: none;">
-                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p>Nenhuma tarefa concluída ainda</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card floating">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-crown"></i> Ranking de Alunos</h2>
-                </div>
-                <div class="ranking">
-                    <div class="ranking-item ranking-1">
-                        <div class="ranking-position">1</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Samuel</div>
-                            <div class="ranking-score">Média geral: 10.0</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item ranking-2">
-                        <div class="ranking-position">2</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Emanuel Pereira Carvalho</div>
-                            <div class="ranking-score">Média geral: 9.6</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item ranking-3">
-                        <div class="ranking-position">3</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Gabriel Furtado</div>
-                            <div class="ranking-score">Média geral: 9.4</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item">
-                        <div class="ranking-position">4</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Lucas</div>
-                            <div class="ranking-score">Média geral: 9.2</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item">
-                        <div class="ranking-position">5</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Júlia Vieira</div>
-                            <div class="ranking-score">Média geral: 9.1</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item">
-                        <div class="ranking-position">6</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Maria Rita</div>
-                            <div class="ranking-score">Média geral: 9.1</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item">
-                        <div class="ranking-position">7</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Julia Marques</div>
-                            <div class="ranking-score">Média geral: 9.1</div>
-                        </div>
-                    </div>
-                    <div class="ranking-item">
-                        <div class="ranking-position">8</div>
-                        <div class="ranking-info">
-                            <div class="ranking-name">Álef</div>
-                            <div class="ranking-score">Média geral: 9.1</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="card floating">
+        <!-- Painel de Avisos -->
+        <div class="card glowing-border fade-in">
             <div class="card-header">
-                <h2 class="card-title"><i class="fas fa-trophy"></i> Faça a diferença</h2>
+                <h2 class="card-title"><i class="fas fa-bullhorn"></i> Painel de Avisos</h2>
+                <i class="fas fa-ellipsis-h"></i>
             </div>
-            <div class="class-ranking">
-                <div class="class-item">
-                    <div class="class-position">Calendário Acadêmico</div>
-                    <div class="class-name">Faça sua agenda</div>
+            <div class="announcements-grid">
+                <div class="announcement-card">
+                    <div class="announcement-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <h3 class="announcement-title">Eventos</h3>
+                    <p class="announcement-description">
+                        Semana de Tecnologia - Palestras e workshops sobre inovação e programação. 
+                        Dias 15 a 19 de julho no auditório principal.
+                    </p>
                 </div>
-                <div class="class-item">
-                    <div class="class-position">Rotina de estudo</div>
-                    <div class="class-name">Adicione ideias voláteis</div>
+                <div class="announcement-card">
+                    <div class="announcement-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="announcement-title">Reuniões</h3>
+                    <p class="announcement-description">
+                        Reunião do Grêmio Estudantil - Discussão sobre melhorias na infraestrutura 
+                        e eventos do segundo semestre.
+                    </p>
                 </div>
-                <div class="class-item">
-                    <div class="class-position">Calculadora</div>
-                    <div class="class-name">Calculadora completa</div>
+                <div class="announcement-card">
+                    <div class="announcement-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="announcement-title">Palestras</h3>
+                    <p class="announcement-description">
+                        Carreiras em TI - Convidados especiais da área de tecnologia compartilham 
+                        experiências e oportunidades.
+                    </p>
                 </div>
-                <div class="class-item">
-                    <div class="class-position">Jornada do Estudante</div>
-                    <div class="class-name">Dedica-se ao Enem</div>
+            </div>
+        </div>
+
+        <!-- Funcionalidades -->
+        <div class="card glowing-border fade-in" id="features">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-sliders-h"></i> Funcionalidades</h2>
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" onclick="openFeature('calculator')">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3 class="feature-title">Calculadora</h3>
+                    <p class="feature-description">
+                        Calculadora científica avançada para cálculos complexos e resolução de problemas matemáticos.
+                    </p>
                 </div>
-                <div class="class-item">
-                    <div class="class-position">Redação + corretor IA</div>
-                    <div class="class-name">Dedica-se a escrita</div>
+                <div class="feature-card" onclick="openFeature('journey')">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="feature-title">Jornada do Estudante</h3>
+                    <p class="feature-description">
+                        Acompanhe seu progresso acadêmico e planeje sua trajetória de estudos de forma organizada.
+                    </p>
                 </div>
-                <div class="class-item">
-                    <div class="class-position">Apostilas</div>
-                    <div class="class-name">Faça a diferença</div>
+                <div class="feature-card" onclick="openFeature('essay')">
+                    <div class="feature-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3 class="feature-title">Redação + Corretor IA</h3>
+                    <p class="feature-description">
+                        Escreva redações e receba correções automáticas com inteligência artificial especializada.
+                    </p>
+                </div>
+                <div class="feature-card" onclick="openFeature('materials')">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="feature-title">Apostilas</h3>
+                    <p class="feature-description">
+                        Acesso a materiais didáticos completos e atualizados para todas as disciplinas.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="pingpong">
-            <h2>🏓 Ping Pong IF Catalão 3D 🏓</h2>
-            <p>"Bora jogar um ping-pongas!"</p>
-        </div>
-
-        <div id="game-container">
-            <div id="game-canvas"></div>
-            <div class="score-display">
-                Pontuação: <span id="score">0</span> | 
-                Velocidade: <span id="speed">1.0x</span>
-            </div>
-            <div class="game-controls">
-                <button class="btn-game start" id="start-game">
-                    <i class="fas fa-play"></i> Iniciar Jogo
-                </button>
-                <button class="btn-game reset" id="reset-game">
-                    <i class="fas fa-sync-alt"></i> Reiniciar
-                </button>
-            </div>
-        </div>
-
-        <div class="instructions">
-            <h3><i class="fas fa-info-circle"></i> Como Jogar Ping Pong 3D</h3>
-            <ul>
-                <li>Clique em <strong>"Iniciar Jogo"</strong> para começar</li>
-                <li>Use as <strong>setas esquerda e direita</strong> para mover sua raquete horizontalmente</li>
-                <li>Use as <strong>setas para cima e para baixo</strong> para mover sua raquete verticalmente</li>
-                <li>Rebata a bola para o lado do oponente para marcar pontos</li>
-                <li>Cada rebatida bem-sucedida aumenta sua pontuação</li>
-                <li>A bola acelera gradualmente, aumentando a dificuldade</li>
-                <li>Se a bola passar pela sua raquete, o jogo reinicia</li>
-                <li>Clique em <strong>"Reiniciar"</strong> para começar uma nova partida</li>
-            </ul>
-        </div>
+        <footer>
+            <p>One Bit - Sistema Educacional &copy; 2024</p>
+            <p>Desenvolvido para revolucionar a educação - Créditos: Beicin, Champola, Sabugo, Furtado, Japa, Schons!</p>
+        </footer>
     </div>
 
-    <footer>
-        <p>IF Task-JaPong 3D &copy; 2025 - Sistema de Organização de Tarefas</p>
-        <p>Desenvolvido para os alunos do IF Catalão; 
-            <p>Créditos; Beicin, Champola, Sabugo, Furtado, Japa, Schons! </p>
-    </footer>
-
-    <!-- Modal para adicionar tarefas -->
+    <!-- Modal para Adicionar Tarefa -->
     <div class="modal" id="taskModal">
-        <div class="modal-content">
+        <div class="modal-content glowing-border">
             <div class="modal-header">
-                <h2 id="modal-title">Adicionar Nova Tarefa</h2>
+                <h2 id="modal-title"><i class="fas fa-plus"></i> Nova Tarefa</h2>
                 <button class="close-modal" onclick="closeTaskModal()">&times;</button>
             </div>
             <form id="taskForm">
                 <div class="form-group">
-                    <label for="taskCategory">Categoria</label>
+                    <label for="taskTitle"><i class="fas fa-heading"></i> Título da Tarefa</label>
+                    <input type="text" id="taskTitle" class="form-control" placeholder="Ex: Prova de Matemática" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDate"><i class="fas fa-calendar"></i> Data</label>
+                    <input type="date" id="taskDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskCategory"><i class="fas fa-tag"></i> Categoria</label>
                     <select id="taskCategory" class="form-control" required>
-                        <option value="Moodle EAD">Moodle EAD</option>
-                        <option value="Prova 1">Prova 1</option>
-                        <option value="Prova 2">Prova 2</option>
-                        <option value="Trabalho">Trabalho</option>
-                        <option value="Atividades em Sala">Atividades em Sala</option>
-                        <option value="Listas">Listas</option>
-                        <option value="Geral">Geral</option>
+                        <option value="estudo">Estudo</option>
+                        <option value="trabalho">Trabalho</option>
+                        <option value="prova">Prova</option>
+                        <option value="atividade">Atividade</option>
+                        <option value="outro">Outro</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="taskName">Nome da Tarefa</label>
-                    <input type="text" id="taskName" class="form-control" placeholder="Ex: Lista de exercícios de Matemática" required>
+                    <label for="taskDescription"><i class="fas fa-align-left"></i> Descrição</label>
+                    <textarea id="taskDescription" class="form-control" rows="4" placeholder="Descreva a tarefa..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="taskDueDate">Data de Entrega</label>
-                    <input type="date" id="taskDueDate" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="taskDescription">Descrição (opcional)</label>
-                    <textarea id="taskDescription" class="form-control" rows="3" placeholder="Detalhes da tarefa..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-plus"></i> Adicionar Tarefa
+                <button type="submit" class="login-btn" style="width: 100%;">
+                    <i class="fas fa-save"></i> Salvar Tarefa
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Floating particles -->
-    <div class="particles" id="particles"></div>
+    <script>
+        // ===== COMENTÁRIOS PARA BANCO DE DADOS =====
+        
+        /*
+        ESTRUTURA DO BANCO DE DADOS - MySQL
+        
+        -- Tabela de Usuários
+        CREATE TABLE usuarios (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            matricula VARCHAR(20) UNIQUE NOT NULL,
+            senha VARCHAR(255) NOT NULL,
+            nome VARCHAR(100) NOT NULL,
+            email VARCHAR(100),
+            avatar_url VARCHAR(255),
+            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        -- Inserir usuário padrão
+        INSERT INTO usuarios (matricula, senha, nome, email) 
+        VALUES ('2023109091040009', 'adminadmin', 'Emanuel Carvalho', 'emanuel@email.com');
+        
+        -- Tabela de Tarefas
+        CREATE TABLE tarefas (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            usuario_id INT,
+            titulo VARCHAR(200) NOT NULL,
+            descricao TEXT,
+            data_tarefa DATE NOT NULL,
+            categoria VARCHAR(50),
+            concluida BOOLEAN DEFAULT FALSE,
+            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        );
+        
+        -- Tabela de Task Diária
+        CREATE TABLE tasks_diarias (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            usuario_id INT,
+            horario_inicio TIME,
+            horario_fim TIME,
+            disciplina VARCHAR(100),
+            descricao TEXT,
+            concluida BOOLEAN DEFAULT FALSE,
+            dia_semana VARCHAR(20),
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        );
+        
+        -- Tabela de Avisos
+        CREATE TABLE avisos (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            titulo VARCHAR(200) NOT NULL,
+            descricao TEXT,
+            tipo ENUM('evento', 'reuniao', 'palestra'),
+            data_publicacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            data_evento DATE,
+            ativo BOOLEAN DEFAULT TRUE
+        );
+        */
 
+        // ===== VARIÁVEIS GLOBAIS =====
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
 
+        // ===== LOGIN =====
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validação de login (usuário: 2023109091040009, senha: adminadmin)
+            if (username === '2023109091040009' && password === 'adminadmin') {
+                const loginScreen = document.getElementById('login-screen');
+                const mainContent = document.getElementById('main-content');
+                
+                // Efeito de transição
+                loginScreen.style.opacity = '0';
+                loginScreen.style.visibility = 'hidden';
+                mainContent.style.opacity = '1';
+                mainContent.style.transform = 'translateY(0)';
+                
+                // Inicializações
+                initCalendar();
+                initScrollAnimations();
+                
+                // Simular carregamento de dados do usuário
+                setTimeout(() => {
+                    loadUserData();
+                }, 1000);
+            } else {
+                alert('Credenciais inválidas! Use: Usuário: 2023109091040009, Senha: adminadmin');
+            }
+        });
 
+        // ===== MENU HAMBÚRGUER =====
+        const menuToggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('nav');
 
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
 
+        // ===== CALENDÁRIO =====
+        function initCalendar() {
+            renderCalendar();
+            loadTodayTasks();
+        }
 
+        function renderCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            const currentMonthElement = document.getElementById('current-month');
+            
+            // Limpar calendário
+            while (calendarGrid.children.length > 7) {
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+            
+            // Atualizar mês atual
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                               "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            currentMonthElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Primeiro dia do mês
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startingDay = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            
+            // Dias do mês anterior
+            const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
+            for (let i = startingDay - 1; i >= 0; i--) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                dayElement.textContent = prevMonthLastDay - i;
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Dias do mês atual
+            const today = new Date();
+            for (let i = 1; i <= totalDays; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                
+                // Verificar se é hoje
+                if (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Simular algumas tarefas (em produção, viria do banco)
+                if (Math.random() > 0.7) {
+                    dayElement.classList.add('has-tasks');
+                }
+                
+                dayElement.onclick = () => selectDate(i);
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Dias do próximo mês
+            const totalCells = 42; // 6 semanas
+            const remainingCells = totalCells - (startingDay + totalDays);
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                dayElement.textContent = i;
+                calendarGrid.appendChild(dayElement);
+            }
+        }
 
-    <!-- Áudio para música de fundo -->
-<audio id="background-music" loop>
-    <source src="music.mp3" type="audio/mpeg">
-    Seu navegador não suporta o elemento de áudio.
-</audio>
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
 
-<!-- Mensagem de interação -->
-<div id="music-prompt" style="position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.8);color:white;padding:10px 15px;border-radius:8px;cursor:pointer;z-index:1000;">
-    Clique aqui para ativar a música
-</div>
+        function selectDate(day) {
+            const selectedDate = new Date(currentYear, currentMonth, day);
+            alert(`Data selecionada: ${selectedDate.toLocaleDateString('pt-BR')}`);
+            // Aqui carregaria as tarefas específicas desta data
+        }
 
-<script>
-    // ===== VARIÁVEIS =====
-    const backgroundMusic = document.getElementById('background-music');
-    const musicPrompt = document.getElementById('music-prompt');
-    let musicStarted = false;
-
-    // ===== FUNÇÃO PARA TOCAR MÚSICA COM FADE-IN =====
-    function startMusic() {
-        if (musicStarted) return;
-
-        backgroundMusic.volume = 0; // começa mudo
-        const playPromise = backgroundMusic.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                musicStarted = true;
-                musicPrompt.style.display = 'none';
-
-                // fade-in suave
-                let vol = 0;
-                const fadeInterval = setInterval(() => {
-                    if (vol < 0.5) {
-                        vol += 0.01;
-                        backgroundMusic.volume = vol;
-                    } else {
-                        clearInterval(fadeInterval);
-                    }
-                }, 50);
-            }).catch(error => {
-                console.log('Erro ao tocar música:', error);
-                musicPrompt.style.display = 'block';
+        function loadTodayTasks() {
+            const todayTasks = document.getElementById('today-tasks');
+            // Simular tarefas do dia (em produção, viria do banco)
+            const tasks = [
+                { title: 'Revisão de Matemática', time: '14:00' },
+                { title: 'Entrega do Projeto', time: '16:30' },
+                { title: 'Estudo para Prova', time: '19:00' }
+            ];
+            
+            todayTasks.innerHTML = '';
+            tasks.forEach(task => {
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task-item';
+                taskElement.innerHTML = `
+                    <div>
+                        <strong>${task.title}</strong>
+                        <div style="font-size: 0.8rem; color: var(--accent-gold);">${task.time}</div>
+                    </div>
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                `;
+                todayTasks.appendChild(taskElement);
             });
         }
-    }
 
-    // ===== ATIVAR MÚSICA COM INTERAÇÃO DO USUÁRIO =====
-    musicPrompt.addEventListener('click', startMusic);
-    document.addEventListener('keydown', startMusic);
-
-    // ===== LOGIN =====
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const loginScreen = document.getElementById('login-screen');
-        const mainContent = document.getElementById('main-content');
-
-        // Fade out login e mostrar conteúdo principal
-        loginScreen.style.opacity = '0';
-        loginScreen.style.visibility = 'hidden';
-        mainContent.style.opacity = '1';
-        mainContent.style.transform = 'translateY(0)';
-
-        // Inicializações do site
-        createParticles();
-        initGame();
-        initCarousel();
-        initScrollAnimations();
-
-        // Tenta tocar música após login
-        setTimeout(startMusic, 500);
-    });
-
-    // ===== CONTROLES DE MÚSICA =====
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const muteBtn = document.getElementById('mute-btn');
-    const volumeSlider = document.getElementById('volume-slider');
-
-    playPauseBtn.addEventListener('click', function() {
-        if (backgroundMusic.paused) {
-            startMusic();
-            this.innerHTML = '<i class="fas fa-pause"></i>';
-        } else {
-            backgroundMusic.pause();
-            this.innerHTML = '<i class="fas fa-play"></i>';
-        }
-    });
-
-    muteBtn.addEventListener('click', function() {
-        backgroundMusic.muted = !backgroundMusic.muted;
-        this.innerHTML = backgroundMusic.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-    });
-
-    volumeSlider.addEventListener('input', function() {
-        backgroundMusic.volume = this.value;
-    });
-
-    // ===== MENU HAMBÚRGUER =====
-    const menuToggle = document.getElementById('menu-toggle');
-    const nav = document.getElementById('nav');
-
-    menuToggle.addEventListener('click', function() {
-        this.classList.toggle('active');
-        nav.classList.toggle('active');
-    });
-
-
-
-
-
-        // ===== CARROSSEL =====
-        function initCarousel() {
-            const carousel = document.getElementById('carousel');
-            const items = document.querySelectorAll('.carousel-item');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            const prevControl = document.getElementById('prev-control');
-            const nextControl = document.getElementById('next-control');
-            
-            let currentIndex = 0;
-            const totalItems = items.length;
-            
-            // Função para atualizar o carrossel
-            function updateCarousel() {
-                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-                
-                // Atualizar indicadores
-                indicators.forEach((indicator, index) => {
-                    if (index === currentIndex) {
-                        indicator.classList.add('active');
-                    } else {
-                        indicator.classList.remove('active');
-                    }
-                });
-            }
-            
-            // Avançar para o próximo slide
-            function nextSlide() {
-                currentIndex = (currentIndex + 1) % totalItems;
-                updateCarousel();
-            }
-            
-            // Voltar para o slide anterior
-            function prevSlide() {
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                updateCarousel();
-            }
-            
-            // Event listeners para os controles
-            nextControl.addEventListener('click', nextSlide);
-            prevControl.addEventListener('click', prevSlide);
-            
-            // Event listeners para os indicadores
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    currentIndex = index;
-                    updateCarousel();
-                });
-            });
-            
-            // Auto-avanço do carrossel
-            setInterval(nextSlide, 5000);
+        // ===== TASK DIÁRIA =====
+        function toggleTask(checkbox) {
+            checkbox.classList.toggle('checked');
         }
 
-        // ===== ANIMAÇÕES DE SCROLL =====
-        function initScrollAnimations() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            
-            function checkScroll() {
-                fadeElements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    
-                    if (elementTop < windowHeight * 0.85) {
-                        element.classList.add('visible');
-                    }
-                });
-            }
-            
-            // Verificar scroll inicial
-            checkScroll();
-            
-            // Verificar scroll durante a rolagem
-            window.addEventListener('scroll', checkScroll);
+        function addTimeSlot() {
+            const dailyTasks = document.querySelector('.daily-tasks');
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.innerHTML = `
+                <div class="time-header">
+                    <span class="time-range">Nova Horário</span>
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                </div>
+                <div class="task-content">
+                    <div class="task-text">
+                        <strong>Nova Disciplina</strong>
+                        <p>Descrição da atividade</p>
+                    </div>
+                </div>
+            `;
+            dailyTasks.insertBefore(timeSlot, dailyTasks.lastElementChild);
         }
 
-        // ===== PARTICLE ANIMATION =====
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 3 and 8 pixels
-                const size = Math.random() * 5 + 3;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration
-                const duration = Math.random() * 20 + 10;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // ===== SISTEMA DE TAREFAS =====
-        function openTaskModal(category) {
+        // ===== MODAL DE TAREFAS =====
+        function openTaskModal() {
             document.getElementById('taskModal').style.display = 'flex';
-            document.getElementById('taskCategory').value = category;
-            document.getElementById('modal-title').textContent = `Nova Tarefa - ${category}`;
+            document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
         }
 
         function closeTaskModal() {
@@ -1752,432 +1453,123 @@
             document.getElementById('taskForm').reset();
         }
 
-        // Fechar modal clicando fora dele
-        window.addEventListener('click', (event) => {
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('taskTitle').value;
+            const date = document.getElementById('taskDate').value;
+            const category = document.getElementById('taskCategory').value;
+            const description = document.getElementById('taskDescription').value;
+            
+            // Aqui enviaria para o banco de dados
+            console.log('Nova tarefa:', { title, date, category, description });
+            
+            // Fechar modal e mostrar confirmação
+            closeTaskModal();
+            showNotification('Tarefa adicionada com sucesso!', 'success');
+            
+            // Atualizar calendário
+            renderCalendar();
+        });
+
+        // ===== FUNCIONALIDADES =====
+        function openFeature(feature) {
+            showNotification(`Abrindo ${feature}...`, 'info');
+            // Aqui redirecionaria para a funcionalidade específica
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            // Fechar menu
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+        }
+
+        // ===== ANIMAÇÕES =====
+        function initScrollAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // ===== NOTIFICAÇÕES =====
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--primary-green)' : type === 'error' ? 'var(--accent-red)' : 'var(--accent-blue)'};
+                color: var(--dark);
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: var(--neon-glow);
+                z-index: 1000;
+                font-weight: 600;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            mainContent.style.opacity = '0';
+            mainContent.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                loginScreen.style.opacity = '1';
+                loginScreen.style.visibility = 'visible';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }, 500);
+            
+            // Fechar menu
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+        }
+
+        // ===== CARREGAMENTO DE DADOS DO USUÁRIO =====
+        function loadUserData() {
+            // Simular carregamento de dados do usuário do banco
+            showNotification('Bem-vindo de volta, Emanuel!', 'success');
+        }
+
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', (e) => {
             const modal = document.getElementById('taskModal');
-            if (event.target === modal) {
+            if (e.target === modal) {
                 closeTaskModal();
             }
         });
 
-        // Adicionar nova tarefa
-        document.getElementById('taskForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const category = document.getElementById('taskCategory').value;
-            const name = document.getElementById('taskName').value;
-            const dueDate = document.getElementById('taskDueDate').value;
-            const description = document.getElementById('taskDescription').value;
-            
-            // Criar elemento de tarefa
-            const taskElement = document.createElement('li');
-            taskElement.className = 'task-item';
-            
-            let taskText = `<strong>${category}:</strong> ${name}`;
-            if (dueDate) {
-                const formattedDate = new Date(dueDate).toLocaleDateString('pt-BR');
-                taskText += ` <br><small>Entrega: ${formattedDate}</small>`;
-            }
-            if (description) {
-                taskText += ` <br><small>${description}</small>`;
-            }
-            
-            taskElement.innerHTML = `
-                <span>${taskText}</span>
-                <div class="task-actions">
-                    <button class="complete-task" onclick="completeTask(this)"><i class="fas fa-check"></i></button>
-                    <button class="delete-task" onclick="deleteTask(this)"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            
-            // Adicionar à lista de tarefas
-            document.getElementById('todo-list').appendChild(taskElement);
-            
-            // Fechar modal e limpar formulário
-            closeTaskModal();
-            
-            // Mostrar mensagem de sucesso com animação
-            const successMsg = document.createElement('div');
-            successMsg.textContent = 'Tarefa adicionada com sucesso!';
-            successMsg.style.position = 'fixed';
-            successMsg.style.bottom = '20px';
-            successMsg.style.right = '20px';
-            successMsg.style.background = 'var(--if-green)';
-            successMsg.style.color = 'white';
-            successMsg.style.padding = '1rem';
-            successMsg.style.borderRadius = '5px';
-            successMsg.style.zIndex = '1000';
-            successMsg.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-            document.body.appendChild(successMsg);
-            
-            // Remove message after 3 seconds
-            setTimeout(() => {
-                successMsg.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(successMsg);
-                }, 500);
-            }, 3000);
-        });
-
-        function completeTask(button) {
-            const taskItem = button.closest('.task-item');
-            taskItem.classList.add('completed');
-            
-            // Remover botão de completar
-            const completeBtn = taskItem.querySelector('.complete-task');
-            if (completeBtn) completeBtn.remove();
-            
-            // Mover para a lista de concluídas
-            document.getElementById('done-list').appendChild(taskItem);
-            
-            // Verificar se precisa mostrar a mensagem de lista vazia
-            checkEmptyTasks();
-            
-            // Animation
-            gsap.fromTo(taskItem, 
-                { scale: 0.8, opacity: 0 }, 
-                { scale: 1, opacity: 1, duration: 0.5 }
-            );
-        }
-
-        function deleteTask(button) {
-            const taskItem = button.closest('.task-item');
-            const isCompleted = taskItem.classList.contains('completed');
-            
-            // Animation
-            gsap.to(taskItem, {
-                opacity: 0,
-                scale: 0,
-                duration: 0.3,
-                onComplete: () => {
-                    taskItem.remove();
-                    
-                    // Verificar se precisa mostrar a mensagem de lista vazia
-                    if (isCompleted) {
-                        checkEmptyTasks();
-                    }
-                }
-            });
-        }
-
-        function checkEmptyTasks() {
-            const doneList = document.getElementById('done-list');
-            const emptyCompleted = document.getElementById('empty-completed');
-            
-            if (doneList.children.length === 0) {
-                emptyCompleted.style.display = 'block';
-            } else {
-                emptyCompleted.style.display = 'none';
-            }
-        }
-
-        function openTab(evt, tabId) {
-            const tabContents = document.getElementsByClassName('tab-content');
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
-            
-            const tabs = document.getElementsByClassName('tab');
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-            
-            document.getElementById(tabId).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        // ===== JOGO PING PONG 3D =====
-        // Variáveis do jogo
-        let scene, camera, renderer;
-        let paddleLeft, paddleRight, ball;
-        let paddleHeight = 2;
-        let paddleWidth = 0.5;
-        let paddleDepth = 0.2;
-        let ballSize = 0.3;
-        let ballSpeedX = 0.05;
-        let ballSpeedY = 0.03;
-        let ballSpeedZ = 0.05;
-        let score = 0;
-        let gameRunning = false;
-        let tableWidth = 10;
-        let tableHeight = 5;
-        let tableDepth = 0.5;
-        let keys = {};
-
-        // Inicializar a cena 3D
-        function initGame() {
-            // Configurar a cena
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x111122);
-
-            // Configurar a câmera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 10;
-            camera.position.y = 5;
-
-            // Configurar o renderizador
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(document.getElementById('game-canvas').offsetWidth, 400);
-            document.getElementById('game-canvas').appendChild(renderer.domElement);
-
-            // Adicionar luzes
-            const ambientLight = new THREE.AmbientLight(0x606060);
-            scene.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(0, 10, 5);
-            scene.add(directionalLight);
-
-            const pointLight = new THREE.PointLight(0x4361ee, 1, 100);
-            pointLight.position.set(0, 5, 5);
-            scene.add(pointLight);
-
-            // Criar a mesa de ping pong
-            createTable();
-
-            // Criar as raquetes
-            createPaddles();
-
-            // Criar a bola
-            createBall();
-
-            // Iniciar a animação
-            animate();
-
-            // Adicionar event listeners para controles
-            document.addEventListener('keydown', handleKeyDown);
-            document.addEventListener('keyup', handleKeyUp);
-        }
-
-        // Criar a mesa de ping pong
-        function createTable() {
-            const tableGeometry = new THREE.BoxGeometry(tableWidth, tableDepth, tableHeight);
-            const tableMaterial = new THREE.MeshLambertMaterial({ color: 0x2E8B57 });
-            const table = new THREE.Mesh(tableGeometry, tableMaterial);
-            table.position.y = -tableDepth / 2;
-            scene.add(table);
-
-            // Linhas da mesa
-            const lineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const lineGeometry = new THREE.BoxGeometry(0.1, tableDepth + 0.1, tableHeight);
-            const line = new THREE.Mesh(lineGeometry, lineMaterial);
-            line.position.x = 0;
-            scene.add(line);
-
-            // Rede
-            const netGeometry = new THREE.BoxGeometry(0.1, 1, tableHeight);
-            const netMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
-            const net = new THREE.Mesh(netGeometry, netMaterial);
-            net.position.set(0, 0.5, 0);
-            scene.add(net);
-        }
-
-        // Criar as raquetes
-        function createPaddles() {
-            const paddleMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
-            const paddleGeometry = new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth);
-
-            // Raquete esquerda (jogador)
-            paddleLeft = new THREE.Mesh(paddleGeometry, paddleMaterial);
-            paddleLeft.position.set(-tableWidth/2 + 1, paddleHeight/2, 0);
-            scene.add(paddleLeft);
-
-            // Raquete direita (oponente)
-            paddleRight = new THREE.Mesh(paddleGeometry, new THREE.MeshLambertMaterial({ color: 0x4361ee }));
-            paddleRight.position.set(tableWidth/2 - 1, paddleHeight/2, 0);
-            scene.add(paddleRight);
-        }
-
-        // Criar a bola
-        function createBall() {
-            const ballGeometry = new THREE.SphereGeometry(ballSize, 32, 32);
-            const ballMaterial = new THREE.MeshLambertMaterial({ color: 0xff4500 });
-            ball = new THREE.Mesh(ballGeometry, ballMaterial);
-            ball.position.set(0, ballSize, 0);
-            scene.add(ball);
-        }
-
-        // Animar a cena
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // MOVIMENTO DA RAQUETE (fora do bloco gameRunning para responder imediatamente)
-            if (keys[38]) { // Seta para cima
-                paddleLeft.position.y = Math.min(paddleLeft.position.y + 0.5, tableHeight);
-            }
-            if (keys[40]) { // Seta para baixo
-                paddleLeft.position.y = Math.max(paddleLeft.position.y - 0.5, paddleHeight/2);
-            }
-            if (keys[37]) { // Seta para esquerda
-                paddleLeft.position.z = Math.max(paddleLeft.position.z - 0.5, -tableHeight/2 + 1);
-            }
-            if (keys[39]) { // Seta para direita
-                paddleLeft.position.z = Math.min(paddleLeft.position.z + 0.5, tableHeight/2 - 1);
-            }
-
-            if (gameRunning) {
-                // Mover a bola
-                ball.position.x += ballSpeedX;
-                ball.position.y += ballSpeedY;
-                ball.position.z += ballSpeedZ;
-
-                // Verificar colisões com as paredes (laterais)
-                if (ball.position.x + ballSize > tableWidth/2 || ball.position.x - ballSize < -tableWidth/2) {
-                    ballSpeedX = -ballSpeedX;
-                }
-
-                // Verificar colisões com as paredes (fundo)
-                if (ball.position.z + ballSize > tableHeight/2 || ball.position.z - ballSize < -tableHeight/2) {
-                    ballSpeedZ = -ballSpeedZ;
-                }
-
-                // Verificar colisões com o teto e o chão
-                if (ball.position.y + ballSize > paddleHeight || ball.position.y - ballSize < ballSize) {
-                    ballSpeedY = -ballSpeedY;
-                }
-
-                // Verificar colisão com a raquete esquerda
-                if (ball.position.x - ballSize < paddleLeft.position.x + paddleWidth/2 &&
-                    ball.position.x + ballSize > paddleLeft.position.x - paddleWidth/2 &&
-                    ball.position.z < paddleLeft.position.z + paddleDepth/2 &&
-                    ball.position.z > paddleLeft.position.z - paddleDepth/2 &&
-                    ball.position.y < paddleLeft.position.y + paddleHeight/2 &&
-                    ball.position.y > paddleLeft.position.y - paddleHeight/2) {
-                    
-                    ballSpeedX = Math.abs(ballSpeedX); // Mover para a direita
-                    score++;
-                    document.getElementById('score').textContent = score;
-                    
-                    // Aumentar a velocidade gradualmente
-                    ballSpeedX *= 1.05;
-                    ballSpeedY *= 1.05;
-                    ballSpeedZ *= 1.05;
-                    
-                    document.getElementById('speed').textContent = (ballSpeedX / 0.05).toFixed(1) + 'x';
-                    
-                    // Efeito visual na raquete
-                    paddleLeft.material.color.set(0x00ff00);
-                    setTimeout(() => {
-                        paddleLeft.material.color.set(0xFFD700);
-                    }, 100);
-                }
-
-                // Verificar colisão com a raquete direita (IA)
-                if (ball.position.x + ballSize > paddleRight.position.x - paddleWidth/2 &&
-                    ball.position.x - ballSize < paddleRight.position.x + paddleWidth/2 &&
-                    ball.position.z < paddleRight.position.z + paddleDepth/2 &&
-                    ball.position.z > paddleRight.position.z - paddleDepth/2 &&
-                    ball.position.y < paddleRight.position.y + paddleHeight/2 &&
-                    ball.position.y > paddleRight.position.y - paddleHeight/2) {
-                    
-                    ballSpeedX = -Math.abs(ballSpeedX); // Mover para a esquerda
-                    
-                    // Efeito visual na raquete
-                    paddleRight.material.color.set(0x0044ff);
-                    setTimeout(() => {
-                        paddleRight.material.color.set(0x4361ee);
-                    }, 100);
-                }
-
-                // IA simples para a raquete direita
-                paddleRight.position.y += (ball.position.y - paddleRight.position.y) * 0.05;
-                paddleRight.position.z += (ball.position.z - paddleRight.position.z) * 0.03;
-
-                // Limitar movimento da raquete direita
-                paddleRight.position.y = Math.max(paddleHeight/2, Math.min(tableHeight, paddleRight.position.y));
-                paddleRight.position.z = Math.max(-tableHeight/2 + 1, Math.min(tableHeight/2 - 1, paddleRight.position.z));
-
-                // Verificar se a bola passou da raquete esquerda (ponto perdido)
-                if (ball.position.x < -tableWidth/2) {
-                    resetGame();
-                }
-            }
-
-            // Rotação suave da câmera
-            camera.position.x = Math.sin(Date.now() * 0.0002) * 5;
-            camera.lookAt(scene.position);
-
-            renderer.render(scene, camera);
-        }
-
-        // Manipular teclas pressionadas
-        function handleKeyDown(event) {
-            keys[event.keyCode] = true;
-        }
-
-        function handleKeyUp(event) {
-            keys[event.keyCode] = false;
-        }
-
-        // Reiniciar o jogo
-        function resetGame() {
-            ball.position.set(0, ballSize, 0);
-            
-            // Definir velocidade e direção aleatórias
-            ballSpeedX = (Math.random() > 0.5 ? 0.05 : -0.05);
-            ballSpeedY = 0.03;
-            ballSpeedZ = (Math.random() * 0.06) - 0.03;
-            
-            score = 0;
-            document.getElementById('score').textContent = score;
-            document.getElementById('speed').textContent = '1.0x';
-            
-            // Reposicionar as raquetes
-            paddleLeft.position.set(-tableWidth/2 + 1, paddleHeight/2, 0);
-            paddleRight.position.set(tableWidth/2 - 1, paddleHeight/2, 0);
-        }
-
-        // Iniciar o jogo
-        document.getElementById('start-game').addEventListener('click', function() {
-            if (!gameRunning) {
-                gameRunning = true;
-                resetGame();
-                this.textContent = ' Jogo Iniciado';
-                this.disabled = true;
-                
-                // Efeito visual
-                gsap.to(this, {
-                    scale: 1.1,
-                    duration: 0.2,
-                    yoyo: true,
-                    repeat: 1
-                });
-            }
-        });
-
-        // Reiniciar o jogo
-        document.getElementById('reset-game').addEventListener('click', function() {
-            resetGame();
-            gameRunning = true;
-            document.getElementById('start-game').textContent = ' Jogo Iniciado';
-            document.getElementById('start-game').disabled = true;
-            
-            // Efeito visual
-            gsap.to(this, {
-                scale: 1.1,
-                duration: 0.2,
-                yoyo: true,
-                repeat: 1
-            });
-        });
-
-        // Redimensionar o jogo quando a janela para redimensionada
-        window.addEventListener('resize', function() {
-            if (camera && renderer) {
-                camera.aspect = document.getElementById('game-canvas').offsetWidth / 400;
-                camera.updateProjectionMatrix();
-                renderer.setSize(document.getElementById('game-canvas').offsetWidth, 400);
-            }
-        });
-
-        // Verificar tarefas vazias ao carregar
-        window.onload = function() {
-            checkEmptyTasks();
-        };
+        // Inicializar animações quando a página carregar
+        window.addEventListener('load', initScrollAnimations);
     </script>
 </body>
 </html>
-
-
-
-
