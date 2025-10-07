@@ -500,8 +500,8 @@
             transform: translateX(5px);
         }
 
-        /* TASK DIÁRIA */
-        .daily-tasks {
+        /* ROTINA DE ESTUDOS */
+        .study-routine {
             margin-top: 1.5rem;
         }
 
@@ -842,6 +842,103 @@
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
         }
 
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(0, 30, 0, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--neon-glow);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .modal-header h2 {
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-green);
+            transform: scale(1.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 40, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            background: rgba(0, 60, 0, 0.8);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            border-color: var(--primary-green);
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .time-inputs .form-control {
+            flex: 1;
+        }
+
         /* RESPONSIVIDADE */
         @media (max-width: 768px) {
             .container {
@@ -872,6 +969,10 @@
             .menu-toggle {
                 top: 20px;
                 right: 20px;
+            }
+            
+            .time-inputs {
+                flex-direction: column;
             }
         }
 
@@ -937,7 +1038,7 @@
             </div>
         </div>
         <ul>
-            <li><a href="#" onclick="scrollToSection('features')"><i class="fas fa-rocket"></i> Painel de Funcionalidades</a></li>
+            <li><a href="#" onclick="scrollToSection('features')"><i class="fas fa-sliders-h"></i> Painel de Funcionalidades</a></li>
             <li><a href="#"><i class="fas fa-users"></i> Fórum do Estudante</a></li>
             <li><a href="#"><i class="fas fa-book"></i> Apostilas</a></li>
             <li><a href="#"><i class="fas fa-graduation-cap"></i> Jornada do Estudante</a></li>
@@ -982,7 +1083,7 @@
             <div class="logo">
                 <i class="fas fa-graduation-cap"></i>
                 <h1>One Bit</h1>
-                <i class="fas fa-rocket"></i>
+                <i class="fas fa-star"></i>
             </div>
             <p>Plataforma Educacional Completa - Organize, Estude, Conquiste</p>
         </header>
@@ -1018,21 +1119,21 @@
                         <!-- Dias do mês serão gerados via JavaScript -->
                     </div>
                     <div class="calendar-tasks">
-                        <h4><i class="fas fa-tasks"></i> Tarefas de Hoje</h4>
-                        <div id="today-tasks">
-                            <!-- Tarefas do dia atual -->
+                        <h4><i class="fas fa-tasks"></i> Tarefas do Dia Selecionado</h4>
+                        <div id="selected-day-tasks">
+                            <!-- Tarefas do dia selecionado -->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Task Diária -->
+            <!-- Rotina de Estudos -->
             <div class="card glowing-border fade-in">
                 <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-list-check"></i> Task Diária</h2>
+                    <h2 class="card-title"><i class="fas fa-list-check"></i> Rotina de Estudos</h2>
                     <i class="fas fa-ellipsis-h"></i>
                 </div>
-                <div class="daily-tasks">
+                <div class="study-routine">
                     <div class="time-slot">
                         <div class="time-header">
                             <span class="time-range">08:00 - 10:00</span>
@@ -1069,8 +1170,8 @@
                             </div>
                         </div>
                     </div>
-                    <button class="add-task-btn" onclick="addTimeSlot()">
-                        <i class="fas fa-plus"></i> Adicionar Horário
+                    <button class="add-task-btn" onclick="openStudyTaskModal()">
+                        <i class="fas fa-plus"></i> Adicionar Horário de Estudo
                     </button>
                 </div>
             </div>
@@ -1205,6 +1306,36 @@
         </div>
     </div>
 
+    <!-- Modal para Adicionar Horário de Estudo -->
+    <div class="modal" id="studyTaskModal">
+        <div class="modal-content glowing-border">
+            <div class="modal-header">
+                <h2 id="modal-title"><i class="fas fa-plus"></i> Novo Horário de Estudo</h2>
+                <button class="close-modal" onclick="closeStudyTaskModal()">&times;</button>
+            </div>
+            <form id="studyTaskForm">
+                <div class="form-group">
+                    <label for="studySubject"><i class="fas fa-book"></i> Disciplina</label>
+                    <input type="text" id="studySubject" class="form-control" placeholder="Ex: Matemática" required>
+                </div>
+                <div class="form-group">
+                    <label for="studyTime"><i class="fas fa-clock"></i> Horário</label>
+                    <div class="time-inputs">
+                        <input type="time" id="studyStartTime" class="form-control" required>
+                        <input type="time" id="studyEndTime" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studyDescription"><i class="fas fa-align-left"></i> Descrição</label>
+                    <textarea id="studyDescription" class="form-control" rows="4" placeholder="Descreva o que será estudado..."></textarea>
+                </div>
+                <button type="submit" class="login-btn" style="width: 100%;">
+                    <i class="fas fa-save"></i> Salvar Horário
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // ===== COMENTÁRIOS PARA BANCO DE DADOS =====
         
@@ -1239,8 +1370,8 @@
             FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
         );
         
-        -- Tabela de Task Diária
-        CREATE TABLE tasks_diarias (
+        -- Tabela de Rotina de Estudos
+        CREATE TABLE rotina_estudos (
             id INT PRIMARY KEY AUTO_INCREMENT,
             usuario_id INT,
             horario_inicio TIME,
@@ -1268,6 +1399,9 @@
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+        let selectedDay = null;
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let studyTasks = JSON.parse(localStorage.getItem('studyTasks')) || [];
 
         // ===== LOGIN =====
         document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -1290,6 +1424,7 @@
                 // Inicializações
                 initCalendar();
                 initScrollAnimations();
+                loadStudyTasks();
                 
                 // Simular carregamento de dados do usuário
                 setTimeout(() => {
@@ -1312,7 +1447,7 @@
         // ===== CALENDÁRIO =====
         function initCalendar() {
             renderCalendar();
-            loadTodayTasks();
+            loadSelectedDayTasks();
         }
 
         function renderCalendar() {
@@ -1356,8 +1491,10 @@
                     dayElement.classList.add('today');
                 }
                 
-                // Simular algumas tarefas (em produção, viria do banco)
-                if (Math.random() > 0.7) {
+                // Verificar se tem tarefas
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayTasks = tasks.filter(task => task.date === dateStr);
+                if (dayTasks.length > 0) {
                     dayElement.classList.add('has-tasks');
                 }
                 
@@ -1389,63 +1526,123 @@
         }
 
         function selectDate(day) {
-            const selectedDate = new Date(currentYear, currentMonth, day);
-            alert(`Data selecionada: ${selectedDate.toLocaleDateString('pt-BR')}`);
-            // Aqui carregaria as tarefas específicas desta data
+            selectedDay = new Date(currentYear, currentMonth, day);
+            const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            
+            // Destacar o dia selecionado
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            calendarDays.forEach(dayEl => {
+                dayEl.classList.remove('selected');
+                if (parseInt(dayEl.textContent) === day && !dayEl.classList.contains('other-month')) {
+                    dayEl.classList.add('selected');
+                    dayEl.style.background = 'rgba(0, 255, 136, 0.3)';
+                    dayEl.style.boxShadow = '0 0 10px rgba(0, 255, 136, 0.5)';
+                }
+            });
+            
+            // Carregar tarefas do dia selecionado
+            loadSelectedDayTasks();
+            
+            // Abrir modal para adicionar tarefa se não houver tarefas
+            const dayTasks = tasks.filter(task => task.date === dateStr);
+            if (dayTasks.length === 0) {
+                setTimeout(() => {
+                    if (confirm(`Deseja adicionar uma tarefa para ${selectedDay.toLocaleDateString('pt-BR')}?`)) {
+                        openTaskModal();
+                        document.getElementById('taskDate').value = dateStr;
+                    }
+                }, 300);
+            }
         }
 
-        function loadTodayTasks() {
-            const todayTasks = document.getElementById('today-tasks');
-            // Simular tarefas do dia (em produção, viria do banco)
-            const tasks = [
-                { title: 'Revisão de Matemática', time: '14:00' },
-                { title: 'Entrega do Projeto', time: '16:30' },
-                { title: 'Estudo para Prova', time: '19:00' }
-            ];
+        function loadSelectedDayTasks() {
+            const selectedDayTasks = document.getElementById('selected-day-tasks');
             
-            todayTasks.innerHTML = '';
-            tasks.forEach(task => {
-                const taskElement = document.createElement('div');
-                taskElement.className = 'task-item';
-                taskElement.innerHTML = `
-                    <div>
-                        <strong>${task.title}</strong>
-                        <div style="font-size: 0.8rem; color: var(--accent-gold);">${task.time}</div>
+            if (!selectedDay) {
+                selectedDayTasks.innerHTML = '<div class="task-item">Selecione um dia no calendário para ver as tarefas</div>';
+                return;
+            }
+            
+            const dateStr = `${selectedDay.getFullYear()}-${String(selectedDay.getMonth() + 1).padStart(2, '0')}-${String(selectedDay.getDate()).padStart(2, '0')}`;
+            const dayTasks = tasks.filter(task => task.date === dateStr);
+            
+            if (dayTasks.length === 0) {
+                selectedDayTasks.innerHTML = `
+                    <div class="task-item">
+                        <div>
+                            <strong>Nenhuma tarefa para este dia</strong>
+                            <div style="font-size: 0.8rem; color: var(--accent-gold);">Clique em "Nova Tarefa" para adicionar</div>
+                        </div>
                     </div>
-                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
                 `;
-                todayTasks.appendChild(taskElement);
+            } else {
+                selectedDayTasks.innerHTML = '';
+                dayTasks.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task-item';
+                    taskElement.innerHTML = `
+                        <div>
+                            <strong>${task.title}</strong>
+                            <div style="font-size: 0.8rem; color: var(--accent-gold);">${task.category}</div>
+                            <div style="font-size: 0.8rem; margin-top: 0.3rem;">${task.description || 'Sem descrição'}</div>
+                        </div>
+                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTaskCompletion('${task.id}')"></div>
+                    `;
+                    selectedDayTasks.appendChild(taskElement);
+                });
+            }
+        }
+
+        // ===== ROTINA DE ESTUDOS =====
+        function loadStudyTasks() {
+            const studyRoutine = document.querySelector('.study-routine');
+            
+            // Remover todos os time-slots exceto o botão
+            const timeSlots = studyRoutine.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                if (!slot.querySelector('.add-task-btn')) {
+                    studyRoutine.removeChild(slot);
+                }
+            });
+            
+            // Adicionar tarefas de estudo
+            studyTasks.forEach(task => {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.innerHTML = `
+                    <div class="time-header">
+                        <span class="time-range">${task.startTime} - ${task.endTime}</span>
+                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleStudyTaskCompletion('${task.id}')"></div>
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>${task.subject}</strong>
+                            <p>${task.description || 'Sem descrição'}</p>
+                        </div>
+                    </div>
+                `;
+                studyRoutine.insertBefore(timeSlot, studyRoutine.lastElementChild);
             });
         }
 
-        // ===== TASK DIÁRIA =====
-        function toggleTask(checkbox) {
-            checkbox.classList.toggle('checked');
-        }
-
-        function addTimeSlot() {
-            const dailyTasks = document.querySelector('.daily-tasks');
-            const timeSlot = document.createElement('div');
-            timeSlot.className = 'time-slot';
-            timeSlot.innerHTML = `
-                <div class="time-header">
-                    <span class="time-range">Nova Horário</span>
-                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
-                </div>
-                <div class="task-content">
-                    <div class="task-text">
-                        <strong>Nova Disciplina</strong>
-                        <p>Descrição da atividade</p>
-                    </div>
-                </div>
-            `;
-            dailyTasks.insertBefore(timeSlot, dailyTasks.lastElementChild);
+        function toggleStudyTaskCompletion(taskId) {
+            const taskIndex = studyTasks.findIndex(task => task.id === taskId);
+            if (taskIndex !== -1) {
+                studyTasks[taskIndex].completed = !studyTasks[taskIndex].completed;
+                localStorage.setItem('studyTasks', JSON.stringify(studyTasks));
+                loadStudyTasks();
+            }
         }
 
         // ===== MODAL DE TAREFAS =====
         function openTaskModal() {
             document.getElementById('taskModal').style.display = 'flex';
-            document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+            if (selectedDay) {
+                const dateStr = `${selectedDay.getFullYear()}-${String(selectedDay.getMonth() + 1).padStart(2, '0')}-${String(selectedDay.getDate()).padStart(2, '0')}`;
+                document.getElementById('taskDate').value = dateStr;
+            } else {
+                document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+            }
         }
 
         function closeTaskModal() {
@@ -1461,8 +1658,19 @@
             const category = document.getElementById('taskCategory').value;
             const description = document.getElementById('taskDescription').value;
             
-            // Aqui enviaria para o banco de dados
-            console.log('Nova tarefa:', { title, date, category, description });
+            // Criar nova tarefa
+            const newTask = {
+                id: Date.now().toString(),
+                title,
+                date,
+                category,
+                description,
+                completed: false
+            };
+            
+            // Adicionar à lista de tarefas
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
             
             // Fechar modal e mostrar confirmação
             closeTaskModal();
@@ -1470,6 +1678,47 @@
             
             // Atualizar calendário
             renderCalendar();
+            loadSelectedDayTasks();
+        });
+
+        // ===== MODAL DE HORÁRIO DE ESTUDO =====
+        function openStudyTaskModal() {
+            document.getElementById('studyTaskModal').style.display = 'flex';
+        }
+
+        function closeStudyTaskModal() {
+            document.getElementById('studyTaskModal').style.display = 'none';
+            document.getElementById('studyTaskForm').reset();
+        }
+
+        document.getElementById('studyTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const subject = document.getElementById('studySubject').value;
+            const startTime = document.getElementById('studyStartTime').value;
+            const endTime = document.getElementById('studyEndTime').value;
+            const description = document.getElementById('studyDescription').value;
+            
+            // Criar novo horário de estudo
+            const newStudyTask = {
+                id: Date.now().toString(),
+                subject,
+                startTime,
+                endTime,
+                description,
+                completed: false
+            };
+            
+            // Adicionar à lista de tarefas de estudo
+            studyTasks.push(newStudyTask);
+            localStorage.setItem('studyTasks', JSON.stringify(studyTasks));
+            
+            // Fechar modal e mostrar confirmação
+            closeStudyTaskModal();
+            showNotification('Horário de estudo adicionado com sucesso!', 'success');
+            
+            // Atualizar rotina de estudos
+            loadStudyTasks();
         });
 
         // ===== FUNCIONALIDADES =====
@@ -1509,7 +1758,7 @@
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: ${type === 'success' ? 'var(--primary-green)' : type === 'error' ? 'var(--accent-red)' : 'var(--accent-blue)'};
+                background: ${type === 'success' ? 'var(--primary-green)' : type === 'error' ? '#ff4444' : 'var(--accent-blue)'};
                 color: var(--dark);
                 padding: 1rem 2rem;
                 border-radius: 10px;
@@ -1562,9 +1811,14 @@
 
         // Fechar modal ao clicar fora
         window.addEventListener('click', (e) => {
-            const modal = document.getElementById('taskModal');
-            if (e.target === modal) {
+            const taskModal = document.getElementById('taskModal');
+            const studyTaskModal = document.getElementById('studyTaskModal');
+            
+            if (e.target === taskModal) {
                 closeTaskModal();
+            }
+            if (e.target === studyTaskModal) {
+                closeStudyTaskModal();
             }
         });
 
